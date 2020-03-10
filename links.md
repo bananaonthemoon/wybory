@@ -17,3 +17,8 @@
 [To cartogram or not to cartogram the Brexit](https://vis4.net/blog/2016/06/to-cartogram-or-not-to-cartogram-the-brexit/)
 
 [Mapping the UK election of 2015: what was done and did it work?](https://www.slideshare.net/GeoSaSI/mapping-the-uk-elections-of-2015-what-was-done-and-did-it-work)
+
+\\
+
+[Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://link.springer.com/chapter/10.1007/978-981-13-3441-2_28)
+
