@@ -29,8 +29,11 @@ unzip("OKWSenat.zip", files="OKWSenat/senat_2019.shx")
 
 #wczytywanie granic obrębów wyborczych
 library(sf)
+install.packages("rmapshaper")
+library(rmapshaper)
 obwody = st_read("OKWSenat/senat_2019.shp", stringsAsFactors=FALSE) #takes a long time to load
-obwody = st_simplify(okregi, dTolerance = 1000)  # 2000 m
+# obwody = st_simplify(okregi, dTolerance = 1000)  # 2000 m
+obwody_simp = ms_simplify(obwody, keep_shapes = TRUE, method = "dp")  # 2000 m
 
 #agregacja wynikow wg obwodow
 # obwody_agg = aggregate(je, list(je), head, n=1)
