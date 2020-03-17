@@ -18,6 +18,14 @@
 
 [Mapping the UK election of 2015: what was done and did it work?](https://www.slideshare.net/GeoSaSI/mapping-the-uk-elections-of-2015-what-was-done-and-did-it-work)
 
+[Cartographic Views of the 2019 General Election](https://worldmapper.org/uk-general-election-2019/)
+
+[Making Election Maps Popular Again](https://lisacharlotterost.de/2016/10/19/election-map/)
+
+[The search for a better US election map](https://www.ft.com/content/3685bf9e-a4cc-11e6-8b69-02899e8bd9d1)
+
+[Maps of the 2016 US presidential election results](http://www-personal.umich.edu/~mejn/election/2016/)
+
 \\
 
 [Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://link.springer.com/chapter/10.1007/978-981-13-3441-2_28)
