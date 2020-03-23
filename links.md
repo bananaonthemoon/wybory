@@ -22,3 +22,10 @@
 
 [Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://link.springer.com/chapter/10.1007/978-981-13-3441-2_28)
 
+\\
+
+[Fundamentals of Data Visualization](https://serialmentor.com/dataviz/index.html)
+
+[Mapping election results in proportional electoral systems](https://sci-hub.tw/https://www.tandfonline.com/doi/full/10.1080/17445647.2016.1239558)
+
+[Critical Thinking About Elections Maps and Data](https://sci-hub.tw/https://www.tandfonline.com/doi/full/10.1080/19338341.2016.1196597?src=recsys)
