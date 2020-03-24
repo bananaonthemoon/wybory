@@ -56,9 +56,13 @@ unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.dbf")
 unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.prj")
 j_ewid = st_read("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE)
 j_ewid = st_transform(j_ewid, crs = 2180)
-
+system.time({plot(st_geometry(j_ewid))})
 #uproszczenie geometrii
 j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "dp", keep = 0.2) 
+
+j_ewid$geometry = j_ewid_simp$geometry
+system.time({plot(st_geometry(j_ewid))})
+
 #ładowanie tego zajmuje LATA
 #problem z encoding 
 #użyta inna funkcja
