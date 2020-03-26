@@ -1,7 +1,7 @@
 ## Kod na podstawie:
 ## https://github.com/Nowosad/spDataLarge/blob/master/data-raw/08_pol_pres15.R (autor: Roger Bivand)
 
-## Wybory prezydenckie z 2015 roku, pierwsza oraz druga tura
+## Wybory prezydenckie z 2015 roku, pierwsza oraz druga tura (podział dla gmin)
 
 
 # Pierwsza tura -----------------------------------------------------------
@@ -21,7 +21,7 @@ tura1 = tura1 %>%
   filter(TERYT.gminy != "149901" & TERYT.gminy != "229901") %>%
   group_by(TERYT.gminy) %>%
   summarise_if(is.numeric, sum) %>%
-  select(-Numer.obwodu)
+  select(-c(2, 4:20))
 
 
 # Druga tura -----------------------------------------------------------
@@ -41,7 +41,7 @@ tura2 = tura2 %>%
   filter(TERYT.gminy != "149901" & TERYT.gminy != "229901") %>%
   group_by(TERYT.gminy) %>%
   summarise_if(is.numeric, sum) %>%
-  select(-Numer.obwodu)
+  select(-c(2, 4:20))
 
 
 # Obie tury ---------------------------------------------------------------
@@ -92,16 +92,19 @@ lodz_krakow[substring(lodz_krakow, 1, 4) %in% "1261"] = "126101"
 j_ewid_1a = aggregate(j_ewid1, list(kod6a = lodz_krakow), head, n = 1)
 
 # ujednolicenie nazw miejscowości
-j_ewid_1a$nazwa = toupper(j_ewid_1a$JPT_NAZWA_)
-j_ewid_1a$nazwa = sub("ZDR[.]", "- ZDRÓJ", sub("N/", "NAD ", sub("( |-)OB.{1,}", "", sub(" (G|M)$", "", sub("[(]W[)]|[(]M[)]", "", sub(" MIASTO$", "",  sub("^MIASTO ", "",  sub("-(G|GM)$", "", sub("-M$", "",  sub("M[.]", "", sub("-MIASTO", "",  sub("GM.{1,4}", "", sub("-GM.{1,}", "", sub("- .{1,}", "", j_ewid_1a$nazwa))))))))))))))
-j_ewid_1a$nazwa = str_trim(j_ewid_1a$nazwa, side = c("both", "left", "right"))
-j_ewid_1a$nazwa[grep("1061", j_ewid_1a$kod6a)] = "ŁÓDŹ"
-j_ewid_1a$nazwa[grep("1261", j_ewid_1a$kod6a)] = "KRAKÓW"
-j_ewid_1a$nazwa[grep("040504", j_ewid_1a$kod6a)] = "KOWALEWO POMORSKIE"
-j_ewid_1a$nazwa[grep("121803", j_ewid_1a$kod6a)] = "KALWARIA ZEBRZYDOWSKA"
+j_ewid_1a$Nazwa = toupper(j_ewid_1a$JPT_NAZWA_)
+j_ewid_1a$Nazwa = sub("ZDR[.]", "- ZDRÓJ", sub("N/", "NAD ", sub("( |-)OB.{1,}", "", sub(" (G|M)$", "", sub("[(]W[)]|[(]M[)]", "", sub(" MIASTO$", "",  sub("^MIASTO ", "",  sub("-(G|GM)$", "", sub("-M$", "",  sub("M[.]", "", sub("-MIASTO", "",  sub("GM.{1,4}", "", sub("-GM.{1,}", "", sub("- .{1,}", "", j_ewid_1a$Nazwa))))))))))))))
+j_ewid_1a$Nazwa = str_trim(j_ewid_1a$nazwa, side = c("both", "left", "right"))
+j_ewid_1a$Nazwa[grep("1061", j_ewid_1a$kod6a)] = "ŁÓDŹ"
+j_ewid_1a$Nazwa[grep("1261", j_ewid_1a$kod6a)] = "KRAKÓW"
+j_ewid_1a$Nazwa[grep("040504", j_ewid_1a$kod6a)] = "KOWALEWO POMORSKIE"
+j_ewid_1a$Nazwa[grep("121803", j_ewid_1a$kod6a)] = "KALWARIA ZEBRZYDOWSKA"
 
-# rodzaje obszarów administracyjnych 
-#----  -- tu w sumie średnio ogarniam co sie dzieje może się pytam prof. Bivanda co tu chciał zrobić?
+
+# Rodzaje gmin ---------------------------------------------------------------
+
+
+# Agregowanie jednostek ewidencyjnych do poziomu gmin
 #szczegółnie 4_5 i 5_4
 j_ewid_k8 = substring(j_ewid$JPT_KOD_JE, 8, 8)
 j_ewid_k8_agg = aggregate(j_ewid_k8, list(j_ewid$kod6), paste, collapse="_")
@@ -111,16 +114,17 @@ j_ewid_k8_agg1 = aggregate(j_ewid_k8_agg, list(kod6a = lodz_krakow), paste, coll
 # -- tu w sumie też średnio ogarniam co sie dzieje
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="9_9_9_9_9")] = "9"
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="9_9_9_9")] = "9"
-names(j_ewid_k8_agg1) = c("kod6a", "uni_gm", "typ_obszaru")
+j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="5_4")] = "3"
+j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="4_5")] = "3"
+names(j_ewid_k8_agg1) = c("kod6a", "TERYT", "Rodzaj.gminy")
 
-# tworzenie typów (powinno być ich więcej)
-Types = rep("Obszar xxxxxxxxxxxxx", length(j_ewid_k8_agg1$typ_obszaru))
-Types[grep("1", j_ewid_k8_agg1$typ_obszaru)] = "Obszar miejski"
-Types[grep("2", j_ewid_k8_agg1$typ_obszaru)] = "Obszar miejski"
-Types[grep("5", j_ewid_k8_agg1$typ_obszaru)] = "Obszar miejsko-wiejski"
-Types[grep("8", j_ewid_k8_agg1$typ_obszaru)] = "Dzielnice Warszawy"
-Types[grep("9", j_ewid_k8_agg1$typ_obszaru)] = "Obszar miejski" #delegacje
-j_ewid_k8_agg1$typ_obszaru = factor(Types)
+# przypisanie rodzaju gmin do jednostek
+Rodzaj.gminy = rep("Gmina wiejska", length(j_ewid_k8_agg1$Rodzaj.gminy))
+Rodzaj.gminy[grep("1", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejska"
+Rodzaj.gminy[grep("3", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejsko-wiejska"
+Rodzaj.gminy[grep("8", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejska"
+Rodzaj.gminy[grep("9", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejska" #delegacje
+j_ewid_k8_agg1$Rodzaj.gminy = factor(Rodzaj.gminy)
 
 
 # Łączenie danych ---------------------------------------------------------
@@ -128,20 +132,24 @@ j_ewid_k8_agg1$typ_obszaru = factor(Types)
 
 #  łączenie danych z geometrią
 j_ewid_1b = merge(j_ewid_1a, j_ewid_k8_agg1, by.x="kod6a", by.y="kod6a")
-tury_geom = merge(j_ewid_1b, obie_tury, by.x="kod6a", by.y="t1_TERYT.gminy")
+pres_gmin = merge(j_ewid_1b, obie_tury, by.x="kod6a", by.y="t1_TERYT.gminy")
+pres_gmin = select(pres_gmin,-c(1:3))
 
-tury_geom$t1_frekw = with(tury_geom, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-tury_geom$t2_frekw = with(tury_geom, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-tury_geom$t1_duda = with(tury_geom, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t2_duda = with(tury_geom, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
-tury_geom$t1_komo = with(tury_geom,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t2_komo = with(tury_geom,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
-tury_geom$t1_braun = with(tury_geom,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_jarubas = with(tury_geom,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_korwin = with(tury_geom,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_kowalski = with(tury_geom,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_kukiz = with(tury_geom,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_ogorek = with(tury_geom,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_palikot = with(tury_geom,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_tanajo = with(tury_geom,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_wilk = with(tury_geom,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+# obliczenie frekfencji oraz wyników kandydatów
+pres_gmin$"1_frekw" = with(pres_gmin, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+pres_gmin$"2_frekw" = with(pres_gmin, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+pres_gmin$f1.duda = with(pres_gmin, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f2.duda = with(pres_gmin, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.komo = with(pres_gmin,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f2.komo = with(pres_gmin,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.braun = with(pres_gmin,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.jarubas = with(pres_gmin,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.korwin = with(pres_gmin,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.kowalski = with(pres_gmin,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.kukiz = with(pres_gmin,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.ogorek = with(pres_gmin,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.palikot = with(pres_gmin,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.tanajo = with(pres_gmin,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
+pres_gmin$f1.Wilk = with(pres_gmin,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+
+write_sf(pres_gmin, dsn = "dane/pres_gmin.gpkg")
