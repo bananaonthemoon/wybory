@@ -152,4 +152,4 @@ pres_gmin$f1.palikot = with(pres_gmin,  t1_Janusz.Marian.Palikot / t1_Liczba.gł
 pres_gmin$f1.tanajo = with(pres_gmin,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
 pres_gmin$f1.Wilk = with(pres_gmin,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
-write_sf(pres_gmin, dsn = "dane/pres_gmin.gpkg")
+write_sf(pres_gmin, dsn = "pres_gmin.gpkg")
