@@ -130,33 +130,18 @@ j_ewid_k8_agg1$typ_obszaru = factor(Types)
 j_ewid_1b = merge(j_ewid_1a, j_ewid_k8_agg1, by.x="kod6a", by.y="kod6a")
 tury_geom = merge(j_ewid_1b, obie_tury, by.x="kod6a", by.y="t1_TERYT.gminy")
 
-tury_geom$t1_frekw = with(tury_geom, t1_Liczba.głosów.ważnych / 
-                             t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-tury_geom$t2_frekw = with(tury_geom, t2_Liczba.głosów.ważnych / 
-                              t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-tury_geom$t1_duda = with(tury_geom, t1_Andrzej.Sebastian.Duda / 
-                            t1_Liczba.głosów.ważnych * 100)
-tury_geom$t2_duda = with(tury_geom, t2_Andrzej.Sebastian.Duda / 
-                             t2_Liczba.głosów.ważnych * 100)
-tury_geom$t1_komo = with(tury_geom,  t1_Bronisław.Maria.Komorowski / 
-                            t1_Liczba.głosów.ważnych * 100)
-tury_geom$t2_komo = with(tury_geom,  t2_Bronisław.Maria.Komorowski / 
-                             t2_Liczba.głosów.ważnych * 100)
-tury_geom$t1_braun = with(tury_geom,  t1_Grzegorz.Michał.Braun / 
-                           t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_jarubas = with(tury_geom,  t1_Adam.Sebastian.Jarubas / 
-                            t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_korwin = with(tury_geom,  t1_Janusz.Ryszard.Korwin.Mikke / 
-                            t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_kowalski = with(tury_geom,  t1_Marian.Janusz.Kowalski / 
-                            t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_kukiz = with(tury_geom,  t1_Paweł.Piotr.Kukiz / 
-                               t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_ogorek = with(tury_geom,  t1_Magdalena.Agnieszka.Ogórek / 
-                               t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_palikot = with(tury_geom,  t1_Janusz.Marian.Palikot / 
-                               t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_tanajo = with(tury_geom,  t1_Paweł.Jan.Tanajno / 
-                               t1_Liczba.głosów.ważnych * 100)
-tury_geom$t1_wilk = with(tury_geom,  t1_Jacek.Wilk / 
-                               t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_frekw = with(tury_geom, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+tury_geom$t2_frekw = with(tury_geom, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+tury_geom$t1_duda = with(tury_geom, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t2_duda = with(tury_geom, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
+tury_geom$t1_komo = with(tury_geom,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t2_komo = with(tury_geom,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
+tury_geom$t1_braun = with(tury_geom,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_jarubas = with(tury_geom,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_korwin = with(tury_geom,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_kowalski = with(tury_geom,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_kukiz = with(tury_geom,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_ogorek = with(tury_geom,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_palikot = with(tury_geom,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_tanajo = with(tury_geom,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
+tury_geom$t1_wilk = with(tury_geom,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
