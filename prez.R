@@ -62,10 +62,7 @@ library(rmapshaper)
 
 # pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
 download.file("https://www.gis-support.pl/downloads/Jednostki_ewidencyjne.zip", "Jednostki_ewidencyjne.zip")
-unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.shp")
-unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.shx")
-unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.dbf")
-unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.prj")
+unzip("Jednostki_ewidencyjne.zip")
 j_ewid = read_sf("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
