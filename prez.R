@@ -66,15 +66,15 @@ unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.shp")
 unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.shx")
 unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.dbf")
 unzip("Jednostki_ewidencyjne.zip", files="Jednostki_ewidencyjne.prj")
-j_ewid = st_read("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE)
-j_ewid = st_transform(j_ewid, crs = 2180)
+j_ewid = read_sf("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>% 
+  select(-c(4:29))
 
-# uproszczenie geometrii
-j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "dp", keep = 0.2) 
+# uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
+j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 j_ewid$geometry = j_ewid_simp$geometry
-
-# usunięcie zbędnych kolumn
-j_ewid = select(j_ewid,-c(4:29))
+write_sf(j_ewid, dsn = "j_ewid.gpkg", driver = "GPKG")
+j_ewid = read_sf("j_ewid.gpkg", stringsAsFactors=FALSE)
 
 
 # Czyszczenie danych ------------------------------------------------------
@@ -94,7 +94,7 @@ j_ewid_1a = aggregate(j_ewid1, list(kod6a = lodz_krakow), head, n = 1)
 # ujednolicenie nazw miejscowości
 j_ewid_1a$Nazwa = toupper(j_ewid_1a$JPT_NAZWA_)
 j_ewid_1a$Nazwa = sub("ZDR[.]", "- ZDRÓJ", sub("N/", "NAD ", sub("( |-)OB.{1,}", "", sub(" (G|M)$", "", sub("[(]W[)]|[(]M[)]", "", sub(" MIASTO$", "",  sub("^MIASTO ", "",  sub("-(G|GM)$", "", sub("-M$", "",  sub("M[.]", "", sub("-MIASTO", "",  sub("GM.{1,4}", "", sub("-GM.{1,}", "", sub("- .{1,}", "", j_ewid_1a$Nazwa))))))))))))))
-j_ewid_1a$Nazwa = str_trim(j_ewid_1a$nazwa, side = c("both", "left", "right"))
+j_ewid_1a$Nazwa = str_trim(j_ewid_1a$Nazwa, side = c("both", "left", "right"))
 j_ewid_1a$Nazwa[grep("1061", j_ewid_1a$kod6a)] = "ŁÓDŹ"
 j_ewid_1a$Nazwa[grep("1261", j_ewid_1a$kod6a)] = "KRAKÓW"
 j_ewid_1a$Nazwa[grep("040504", j_ewid_1a$kod6a)] = "KOWALEWO POMORSKIE"
@@ -151,5 +151,7 @@ pres_gmin$f1.ogorek = with(pres_gmin,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczb
 pres_gmin$f1.palikot = with(pres_gmin,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
 pres_gmin$f1.tanajo = with(pres_gmin,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
 pres_gmin$f1.Wilk = with(pres_gmin,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+
+plot(pres_gmin["f1.komo"])
 
 write_sf(pres_gmin, dsn = "pres_gmin.gpkg")
