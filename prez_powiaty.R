@@ -1,5 +1,5 @@
 ## Kod na podstawie:
-## https://github.com/Nowosad/spDataLarge/blob/master/data-raw/08_pol_pres15.R (autor: Roger Bivand)
+## https://github.com/Nowosad/spDataLarge/blob/master/data-raw/08_pol_prez15.R (autor: Roger Bivand)
 
 ## Wybory prezydenckie z 2015 roku, pierwsza oraz druga tura (podział dla powiatów)
 
@@ -41,7 +41,7 @@ tura2 = aggregate(tura2[, 5:25], list(tura2$kod4), sum)
 # Obie tury ---------------------------------------------------------------
 
 
-# przypisanie prefiksów do kolumn w turach 
+# Przypisanie prefiksów do kolumn w turach 
 names(tura1) = paste("t1_", names(tura1), sep="")
 names(tura2) = paste("t2_", names(tura2), sep="")
 
@@ -54,14 +54,14 @@ obie_tury = merge(tura1, tura2, by.x="t1_Group.1", by.y="t2_Group.1")
 library(sf)
 library(rmapshaper)
 
-# pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
+# Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
 download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "Powiaty.zip")
 unzip("Powiaty.zip")
 powiat = read_sf("Powiaty.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
 
-# uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
+# Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 powiat$geometry = powiat_simp$geometry
 write_sf(powiat, dsn = "powiat.gpkg", driver = "GPKG")
@@ -71,7 +71,7 @@ powiat = read_sf("powiat.gpkg", stringsAsFactors=FALSE)
 # Czyszczenie danych ------------------------------------------------------
 
 
-# porządkowanie obszarów administracyjnych
+# Porządkowanie obszarów administracyjnych
 powiat$kod4 = str_sub(powiat$JPT_KOD_JE, 1, 4) 
 powiat_agg = aggregate(powiat, list(powiat$kod4), head, n=1)
 powiat1 = powiat_agg[, c("kod4", "JPT_NAZWA_", attr(powiat_agg, "sf_column"))]
@@ -81,24 +81,24 @@ powiat1$Nazwa = toupper(powiat1$JPT_NAZWA_)
 # Łączenie danych ---------------------------------------------------------
 
 
-#  łączenie danych z geometrią
-pres_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1")
+# Łączenie danych z geometrią
+prez_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1")
 
-# obliczenie frekfencji oraz wyników kandydatów
-pres_powiat$"1_frekw" = with(pres_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-pres_powiat$"2_frekw" = with(pres_powiat, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-pres_powiat$f1.duda = with(pres_powiat, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f2.duda = with(pres_powiat, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.komo = with(pres_powiat,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f2.komo = with(pres_powiat,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.braun = with(pres_powiat,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.jarubas = with(pres_powiat,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.korwin = with(pres_powiat,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.kowalski = with(pres_powiat,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.kukiz = with(pres_powiat,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.ogorek = with(pres_powiat,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.palikot = with(pres_powiat,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.tanajo = with(pres_powiat,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
-pres_powiat$f1.Wilk = with(pres_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+# Obliczenie frekfencji oraz wyników kandydatów
+prez_powiat$"1_frekw" = with(prez_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_powiat$"2_frekw" = with(prez_powiat, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_powiat$f1.duda = with(prez_powiat, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f2.duda = with(prez_powiat, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.komo = with(prez_powiat,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f2.komo = with(prez_powiat,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.braun = with(prez_powiat,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.jarubas = with(prez_powiat,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.korwin = with(prez_powiat,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.kowalski = with(prez_powiat,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.kukiz = with(prez_powiat,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.ogorek = with(prez_powiat,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.palikot = with(prez_powiat,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.tanajo = with(prez_powiat,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$f1.Wilk = with(prez_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
-write_sf(pres_powiat, dsn = "pres_powiat.gpkg")
+write_sf(prez_powiaty, dsn = "prez_powiaty.gpkg")
