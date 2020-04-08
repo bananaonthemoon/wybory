@@ -27,7 +27,7 @@ tura1 = tura1 %>%
 # Druga tura -----------------------------------------------------------
 
 
-# Pobranie oraz wczytanie danych z pierwszej tury
+# Pobranie oraz wczytanie danych z drugiej tury
 download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "wyniki_tura2.zip")
 unzip("wyniki_tura2.zip", files="wyniki_tura2.xls")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
@@ -47,7 +47,7 @@ tura2 = tura2 %>%
 # Obie tury ---------------------------------------------------------------
 
 
-# przypisanie prefiksów do kolumn w turach 
+# Przypisanie prefiksów do kolumn w turach 
 names(tura1) = paste("t1_", names(tura1), sep="")
 names(tura2) = paste("t2_", names(tura2), sep="")
 
@@ -60,14 +60,14 @@ obie_tury = merge(tura1, tura2, by.x="t1_TERYT.gminy", by.y="t2_TERYT.gminy")
 library(sf)
 library(rmapshaper)
 
-# pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
+# Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
 download.file("https://www.gis-support.pl/downloads/Jednostki_ewidencyjne.zip", "Jednostki_ewidencyjne.zip")
 unzip("Jednostki_ewidencyjne.zip")
 j_ewid = read_sf("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
 
-# uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
+# Uproszczenie geometrii i zapisanie pliku w formacie geopackage
 j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 j_ewid$geometry = j_ewid_simp$geometry
 write_sf(j_ewid, dsn = "j_ewid.gpkg", driver = "GPKG")
@@ -77,18 +77,18 @@ j_ewid = read_sf("j_ewid.gpkg", stringsAsFactors=FALSE)
 # Czyszczenie danych ------------------------------------------------------
 
 
-# porządkowanie obszarów administracyjnych
+# Porządkowanie obszarów administracyjnych
 j_ewid$kod6 = str_sub(j_ewid$JPT_KOD_JE, 1, 6) 
 j_ewid_agg = aggregate(j_ewid, list(j_ewid$kod6), head, n=1)
 j_ewid1 = j_ewid_agg[, c("kod6", "JPT_NAZWA_", attr(j_ewid_agg, "sf_column"))]
 
-# poprawienie kodowania dla Łodzi oraz Krakowa
+# Poprawienie kodowania dla Łodzi oraz Krakowa
 lodz_krakow = j_ewid1$kod6
 lodz_krakow[substring(lodz_krakow, 1, 4) %in% "1061"] = "106101"
 lodz_krakow[substring(lodz_krakow, 1, 4) %in% "1261"] = "126101"
 j_ewid_1a = aggregate(j_ewid1, list(kod6a = lodz_krakow), head, n = 1)
 
-# ujednolicenie nazw miejscowości
+# Ujednolicenie nazw miejscowości
 j_ewid_1a$Nazwa = toupper(j_ewid_1a$JPT_NAZWA_)
 j_ewid_1a$Nazwa = sub("ZDR[.]", "- ZDRÓJ", sub("N/", "NAD ", sub("( |-)OB.{1,}", "", sub(" (G|M)$", "", sub("[(]W[)]|[(]M[)]", "", sub(" MIASTO$", "",  sub("^MIASTO ", "",  sub("-(G|GM)$", "", sub("-M$", "",  sub("M[.]", "", sub("-MIASTO", "",  sub("GM.{1,4}", "", sub("-GM.{1,}", "", sub("- .{1,}", "", j_ewid_1a$Nazwa))))))))))))))
 j_ewid_1a$Nazwa = str_trim(j_ewid_1a$Nazwa, side = c("both", "left", "right"))
@@ -102,20 +102,17 @@ j_ewid_1a$Nazwa[grep("121803", j_ewid_1a$kod6a)] = "KALWARIA ZEBRZYDOWSKA"
 
 
 # Agregowanie jednostek ewidencyjnych do poziomu gmin
-#szczegółnie 4_5 i 5_4
+# Szczegółnie 4_5 i 5_4
 j_ewid_k8 = substring(j_ewid$JPT_KOD_JE, 8, 8)
 j_ewid_k8_agg = aggregate(j_ewid_k8, list(j_ewid$kod6), paste, collapse="_")
 j_ewid_k8_agg1 = aggregate(j_ewid_k8_agg, list(kod6a = lodz_krakow), paste, collapse="_")
-
-# jedna poprawka (ok, to jest kompletnie niepotrzebne, ale trzeba poprawić Kraków i Łódź) 
-# -- tu w sumie też średnio ogarniam co sie dzieje
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="9_9_9_9_9")] = "9"
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="9_9_9_9")] = "9"
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="5_4")] = "3"
 j_ewid_k8_agg1$x[which(j_ewid_k8_agg1$x =="4_5")] = "3"
 names(j_ewid_k8_agg1) = c("kod6a", "TERYT", "Rodzaj.gminy")
 
-# przypisanie rodzaju gmin do jednostek
+# Przypisanie rodzaju gmin do jednostek
 Rodzaj.gminy = rep("Gmina wiejska", length(j_ewid_k8_agg1$Rodzaj.gminy))
 Rodzaj.gminy[grep("1", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejska"
 Rodzaj.gminy[grep("3", j_ewid_k8_agg1$Rodzaj.gminy)] = "Gmina miejsko-wiejska"
@@ -127,12 +124,12 @@ j_ewid_k8_agg1$Rodzaj.gminy = factor(Rodzaj.gminy)
 # Łączenie danych ---------------------------------------------------------
 
 
-#  łączenie danych z geometrią
+# Łączenie danych z geometrią
 j_ewid_1b = merge(j_ewid_1a, j_ewid_k8_agg1, by.x="kod6a", by.y="kod6a")
 pres_gmin = merge(j_ewid_1b, obie_tury, by.x="kod6a", by.y="t1_TERYT.gminy")
 pres_gmin = select(pres_gmin,-c(1:3))
 
-# obliczenie frekfencji oraz wyników kandydatów
+# Obliczenie frekfencji oraz wyników kandydatów
 pres_gmin$"1_frekw" = with(pres_gmin, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
 pres_gmin$"2_frekw" = with(pres_gmin, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
 pres_gmin$f1.duda = with(pres_gmin, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
