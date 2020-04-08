@@ -18,7 +18,8 @@ tura1 = read.csv2("prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250"
 # Czyszczenie oraz agregowanie danych
 tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
 tura1$kod2 = str_sub(tura1$TERYT.gminy, 1, 2)
-tura1 = aggregate(tura1[, 7:37], list(tura1$kod2), sum)
+tura1 = tura1 %>% select(-c(4:6, 8:24))
+tura1 = aggregate(tura1[, 4:16], list(tura1$kod2), sum)
 
 
 # Druga tura -----------------------------------------------------------
@@ -35,7 +36,8 @@ tura2 = read.csv2("wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", string
 # Czyszczenie oraz agregowanie danych
 tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
 tura2$kod2 = str_sub(tura2$TERYT.gminy, 1, 2)
-tura2 = aggregate(tura2[, 5:25], list(tura2$kod2), sum)
+tura2 = tura2 %>% select(-c(4, 6:22))
+tura2 = aggregate(tura2[, 4:7], list(tura2$kod2), sum)
 
 
 # Obie tury ---------------------------------------------------------------

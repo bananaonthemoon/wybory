@@ -18,7 +18,8 @@ tura1 = read.csv2("prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250"
 # Czyszczenie oraz agregowanie danych
 tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
 tura1$kod4 = str_sub(tura1$TERYT.gminy, 1, 4)
-tura1 = aggregate(tura1[, 7:37], list(tura1$kod4), sum)
+tura1 = tura1 %>% select(-c(4:6, 8:24))
+tura1 = aggregate(tura1[, 4:16], list(tura1$kod4), sum)
 
 
 # Druga tura -----------------------------------------------------------
@@ -35,7 +36,8 @@ tura2 = read.csv2("wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", string
 # Czyszczenie oraz agregowanie danych
 tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
 tura2$kod4 = str_sub(tura2$TERYT.gminy, 1, 4)
-tura2 = aggregate(tura2[, 5:25], list(tura2$kod4), sum)
+tura2 = tura2 %>% select(-c(4, 6:22))
+tura2 = aggregate(tura2[, 4:7], list(tura2$kod4), sum)
 
 
 # Obie tury ---------------------------------------------------------------
@@ -82,7 +84,8 @@ powiat1$Nazwa = toupper(powiat1$JPT_NAZWA_)
 
 
 # Łączenie danych z geometrią
-prez_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1")
+prez_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1") %>%
+  select(-c(1:3))
 
 # Obliczenie frekfencji oraz wyników kandydatów
 prez_powiat$"1_frekw" = with(prez_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
@@ -100,5 +103,6 @@ prez_powiat$f1.ogorek = with(prez_powiat,  t1_Magdalena.Agnieszka.Ogórek / t1_L
 prez_powiat$f1.palikot = with(prez_powiat,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
 prez_powiat$f1.tanajo = with(prez_powiat,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
 prez_powiat$f1.Wilk = with(prez_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+
 
 write_sf(prez_powiat, dsn = "prez_powiaty.gpkg")
