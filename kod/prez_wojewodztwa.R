@@ -11,27 +11,27 @@ library(tidyverse)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "prezydent_2015_tura1.zip")
-unzip("prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv")
-tura1 = read.csv2("prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/pobrane/prezydent_2015_tura1.zip")
+unzip("prezydent_2015_tura1.zip", files="dane/pobrane/prezydent_2015_tura1.csv")
+tura1 = read.csv2("dane/pobrane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
 tura1$kod2 = str_sub(tura1$TERYT.gminy, 1, 2)
 tura1 = tura1 %>% select(-c(4:6, 8:24))
-tura1 = aggregate(tura1[, 4:16], list(tura1$kod2), sum)
+tura1 = aggregate(tura1[, 4:17], list(tura1$kod2), sum)
 
 
 # Druga tura -----------------------------------------------------------
 
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "wyniki_tura2.zip")
-unzip("wyniki_tura2.zip", files="wyniki_tura2.xls")
+download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/pobrane/wyniki_tura2.zip")
+unzip("wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
 # https://github.com/tidyverse/readxl/issues/565
 # przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
-tura2 = read.csv2("wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+tura2 = read.csv2("dane/pobrane/wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
@@ -57,17 +57,17 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
-unzip("Wojewodztwa.zip")
-woj = read_sf("Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
+download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "dane/pobrane/Wojewodztwa.zip")
+unzip("Wojewodztwa.zip", exdir = "dane/pobrane")
+woj = read_sf("dane/pobrane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
 
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 woj_simp = ms_simplify(woj, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 woj$geometry = woj_simp$geometry
-write_sf(woj, dsn = "woj.gpkg", driver = "GPKG")
-woj = read_sf("woj.gpkg", stringsAsFactors=FALSE)
+write_sf(woj, dsn = "dane/pobrane/woj.gpkg", driver = "GPKG")
+woj = read_sf("dane/pobrane/woj.gpkg", stringsAsFactors=FALSE)
 
 
 # Czyszczenie danych ------------------------------------------------------
@@ -103,4 +103,4 @@ prez_woj$f1.palikot = with(prez_woj,  t1_Janusz.Marian.Palikot / t1_Liczba.głos
 prez_woj$f1.tanajo = with(prez_woj,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
 prez_woj$f1.Wilk = with(prez_woj,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
-write_sf(prez_woj, dsn = "prez_woj.gpkg")
+write_sf(prez_woj, dsn = "dane/prez_woj.gpkg")

@@ -11,9 +11,9 @@ library(tidyverse)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "prezydent_2015_tura1.zip")
-unzip("prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv")
-tura1 = read.csv2("prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/pobrane/prezydent_2015_tura1.zip")
+unzip("prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv", exdir = "dane/pobrane")
+tura1 = read.csv2("dane/pobrane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
@@ -28,12 +28,12 @@ tura1 = tura1 %>%
 
 
 # Pobranie oraz wczytanie danych z drugiej tury
-download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "wyniki_tura2.zip")
-unzip("wyniki_tura2.zip", files="wyniki_tura2.xls")
+download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/pobrane/wyniki_tura2.zip")
+unzip("wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
 # https://github.com/tidyverse/readxl/issues/565
 # przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
-tura2 = read.csv2("wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+tura2 = read.csv2("dane/pobrane/wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
@@ -61,17 +61,17 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Jednostki_ewidencyjne.zip", "Jednostki_ewidencyjne.zip")
-unzip("Jednostki_ewidencyjne.zip")
-j_ewid = read_sf("Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
+download.file("https://www.gis-support.pl/downloads/Jednostki_ewidencyjne.zip", "dane/pobrane/Jednostki_ewidencyjne.zip")
+unzip("Jednostki_ewidencyjne.zip", exdir = "dane/pobrane")
+j_ewid = read_sf("dane/pobrane/Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
 
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 j_ewid$geometry = j_ewid_simp$geometry
-write_sf(j_ewid, dsn = "j_ewid.gpkg", driver = "GPKG")
-j_ewid = read_sf("j_ewid.gpkg", stringsAsFactors=FALSE)
+write_sf(j_ewid, dsn = "dane/temp/j_ewid.gpkg", driver = "GPKG")
+j_ewid = read_sf("dane/temp/j_ewid.gpkg", stringsAsFactors=FALSE)
 
 
 # Czyszczenie danych ------------------------------------------------------
@@ -146,4 +146,4 @@ prez_gminy$f1.palikot = with(prez_gminy,  t1_Janusz.Marian.Palikot / t1_Liczba.g
 prez_gminy$f1.tanajo = with(prez_gminy,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
 prez_gminy$f1.Wilk = with(prez_gminy,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
-write_sf(prez_gminy, dsn = "prez_gminy.gpkg")
+write_sf(prez_gminy, dsn = "dane/prez_gminy.gpkg")
