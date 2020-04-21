@@ -1,7 +1,3 @@
-
-# dodanie danych ----------------------------------------------------------
-
-
 library(sf)
 library(tidyverse)
 library(linemap)
@@ -10,21 +6,21 @@ library(linemap)
 #unzip("ref-countries-2016-20m.shp.zip")
 #unzip("CNTR_RG_20M_2016_4326.shp.zip")
 #europa = read_sf("CNTR_RG_20M_2016_4326.shp", stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180) %>%
+st_transform(crs = 2180) %>%
   drop_na() 
 #próbowane st_cast, st_sf
 
-#download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
-#unzip("Wojewodztwa.zip")
+download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
+unzip("Wojewodztwa.zip")
 granice = read_sf("Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>%
   st_combine() 
 
-pres_gmin = read_sf("pres_gmin.gpkg", stringsAsFactors=FALSE) 
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
 
 
 # LINEMAP -----------------------------------------------------------------
-
 
 # wizualizacja 1 ------------------------------------------------------------
 
@@ -32,25 +28,21 @@ pres_gmin = read_sf("pres_gmin.gpkg", stringsAsFactors=FALSE)
 #tak na oko
 #możnaby było zrobić coś
 #dla europa nie działa, ale dla granice tak
-grid = getgrid(x = pres_gmin, cellsize = 15000, var = "X1_frekw")
+grid = getgrid(x = prez_woj, cellsize = 4000, var = "f1.duda")
 tlo = par(mar=c(0,0,0,0), bg = "ivory2")
 plot(st_geometry(granice), col="ivory1", border = NA,
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X1_frekw", k = 50, threshold = 0.5,
-        col = "ivory1", border = "ivory4", lwd = 1, add = TRUE)
+linemap(x = grid, var = "f1.duda", k = 200, threshold = 0.00005,
+        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
 par(tlo)
 
 
 # wizualizacja 2 ------------------------------------------------------------
 
-
-
-plot(st_geometry(europa), col="lightblue3", border = NA, bg = "lightblue2",
+opar <- par(mar = c(0,0,0,0))
+plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-#Błąd w poleceniu 'UseMethod("st_geometry")':
-#niestosowalna metoda dla 'st_geometry' zastosowana do obiektu klasy "c('tbl_df', 'tbl', 'data.frame')"
-linemap(x = grid, var = "X1_frekw", k = 500, threshold = 0.5,
-        col = "lightblue3", border = "white", lwd = 0.8,
+linemap(x = grid, var = "f1.duda", k = 5000, threshold = 0.000005,
+        col = "lightblue3", border = "white", lwd = 0.6,
         add = TRUE)
 par(opar)
-
