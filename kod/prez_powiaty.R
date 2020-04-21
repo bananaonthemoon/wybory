@@ -13,7 +13,7 @@ library(readxl)
 # Pobranie oraz wczytanie danych z pierwszej tury
 download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "prezydent_2015_tura1.zip")
 unzip("prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv")
-tura1 = read.csv2("prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+tura1 = read.csv2("dane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
@@ -31,7 +31,7 @@ unzip("wyniki_tura2.zip", files="wyniki_tura2.xls")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
 # https://github.com/tidyverse/readxl/issues/565
 # przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
-tura2 = read.csv2("wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+tura2 = read.csv2("dane/wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
 tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
@@ -58,7 +58,7 @@ library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
 download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "Powiaty.zip")
-unzip("Powiaty.zip")
+unzip("Powiaty.zip", exdir = "dane")
 powiat = read_sf("Powiaty.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
@@ -85,7 +85,7 @@ powiat1$Nazwa = toupper(powiat1$JPT_NAZWA_)
 
 # Łączenie danych z geometrią
 prez_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1") %>%
-  select(-c(1:3))
+  select(-c(1:2))
 
 # Obliczenie frekfencji oraz wyników kandydatów
 prez_powiat$"1_frekw" = with(prez_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
@@ -105,4 +105,4 @@ prez_powiat$f1.tanajo = with(prez_powiat,  t1_Paweł.Jan.Tanajno / t1_Liczba.gł
 prez_powiat$f1.Wilk = with(prez_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
 
-write_sf(prez_powiat, dsn = "prez_powiaty.gpkg")
+write_sf(prez_powiat, dsn = "dane/prez_powiaty.gpkg")
