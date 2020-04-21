@@ -424,7 +424,10 @@ linemap(x = grid, var = "f1.duda", k = 5000, threshold = 0.000005,
 par(opar)
 ```
 
+
+
 ## Zmienna `X2_frekw`
+
 
 ## Wizualizacja używając pakietu `geogrid`
 
