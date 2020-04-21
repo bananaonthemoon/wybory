@@ -12,7 +12,7 @@ st_transform(crs = 2180) %>%
 
 download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
 unzip("Wojewodztwa.zip")
-granice = read_sf("Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
+granice = read_sf("dane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>%
   st_combine() 
 
@@ -28,7 +28,7 @@ prez_woj = read_sf(prez, stringsAsFactors=FALSE)
 #tak na oko
 #możnaby było zrobić coś
 #dla europa nie działa, ale dla granice tak
-grid = getgrid(x = prez_woj, cellsize = 4000, var = "f1.duda")
+grid = getgrid(x = prez_woj, cellsize = 6000, var = "f1.duda")
 tlo = par(mar=c(0,0,0,0), bg = "ivory2")
 plot(st_geometry(granice), col="ivory1", border = NA,
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
