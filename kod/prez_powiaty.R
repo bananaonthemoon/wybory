@@ -11,8 +11,8 @@ library(tidyverse)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/pobrane/prezydent_2015_tura1.zip")
-unzip("prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv", exdir = "dane/pobrane")
+download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/temp/prezydent_2015_tura1.zip")
+unzip("dane/temp/prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv", exdir = "dane/pobrane")
 tura1 = read.csv2("dane/pobrane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
@@ -26,8 +26,8 @@ tura1 = aggregate(tura1[, 4:16], list(tura1$kod4), sum)
 
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/pobrane/wyniki_tura2.zip")
-unzip("dane/pobrane/wyniki_tura2.zip", files="wyniki_tura2.xls")
+download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/temp/wyniki_tura2.zip")
+unzip("dane/temp/wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
 # https://github.com/tidyverse/readxl/issues/565
 # przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
@@ -57,8 +57,8 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "dane/pobrane/Powiaty.zip")
-unzip("Powiaty.zip", exdir = "dane/pobrane")
+download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "dane/temp/Powiaty.zip")
+unzip("dane/temp/Powiaty.zip", exdir = "dane/pobrane")
 powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
@@ -66,8 +66,8 @@ powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 powiat$geometry = powiat_simp$geometry
-write_sf(powiat, dsn = "dane/pobrane/powiat.gpkg", driver = "GPKG")
-powiat = read_sf("dane/pobrane/powiat.gpkg", stringsAsFactors=FALSE)
+write_sf(powiat, dsn = "dane/temp/powiat.gpkg", driver = "GPKG")
+powiat = read_sf("dane/temp/powiat.gpkg", stringsAsFactors=FALSE)
 
 
 # Czyszczenie danych ------------------------------------------------------

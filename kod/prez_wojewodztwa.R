@@ -11,8 +11,8 @@ library(tidyverse)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/pobrane/prezydent_2015_tura1.zip")
-unzip("prezydent_2015_tura1.zip", files="dane/pobrane/prezydent_2015_tura1.csv")
+download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/temp/prezydent_2015_tura1.zip")
+unzip("dane/temp/prezydent_2015_tura1.zip", files="dane/pobrane/prezydent_2015_tura1.csv")
 tura1 = read.csv2("dane/pobrane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
@@ -26,8 +26,8 @@ tura1 = aggregate(tura1[, 4:17], list(tura1$kod2), sum)
 
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/pobrane/wyniki_tura2.zip")
-unzip("wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
+download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/temp/wyniki_tura2.zip")
+unzip("dane/temp/wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
 # readxl::read_excel() niepoprawna kolumna "TERYT gminy"
 # https://github.com/tidyverse/readxl/issues/565
 # przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
@@ -57,8 +57,8 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "dane/pobrane/Wojewodztwa.zip")
-unzip("Wojewodztwa.zip", exdir = "dane/pobrane")
+download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "dane/temp/Wojewodztwa.zip")
+unzip("dane/temp/Wojewodztwa.zip", exdir = "dane/pobrane")
 woj = read_sf("dane/pobrane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
