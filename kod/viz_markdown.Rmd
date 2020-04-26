@@ -9,22 +9,28 @@ output: html_document
 
 ## Wizualizacja używając pakietu `geogrid`
 
-```{r echo=FALSE}
+```{r, echo=FALSE}
 library(geogrid)
 library(sf)
 library(tidyverse)
 library(tmap)
+```
+
+### Na przykładzie województw
+```{r}
 
 prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
+prez_woj = read_sf(prez, stringsAsFactors=FALSE)
 prez_woj$Nazwa4 = substr(prez_woj$Nazwa, 1, 4)
+
 
 # rawplot -----------------------------------------------------------------
 
 
 rawplot_woj = tm_shape(prez_woj) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
 
 # hexplot -----------------------------------------------------------------
@@ -40,8 +46,9 @@ new_cells_hex_woj = calculate_grid(shape = prez_woj, grid_type = "hexagonal", se
 resulthex_woj = assign_polygons(prez_woj, new_cells_hex_woj)
 
 hexplot_woj = tm_shape(resulthex_woj) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
 
 # regplot -----------------------------------------------------------------
@@ -56,15 +63,16 @@ new_cells_reg_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed
 resultreg_woj = assign_polygons(prez_woj, new_cells_reg_woj)
 
 regplot_woj = tm_shape(resultreg_woj) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
-tmap_arrange(rawplot_woj, hexplot_woj, regplot_woj, nrow = 3)
+reglayout_woj = tm_shape(resultreg_woj) + tm_polygons("t1.duda", palette = "viridis") +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
+tmap_arrange(rawplot_woj, hexplot_woj, regplot_woj, reglayout_woj, nrow = 1)
 
 ```
-
-do poprawienia
 
 
 ### Na przykładzie powiatów
@@ -78,9 +86,10 @@ prez_powiaty$Nazwa4 = substr(prez_powiaty$Nazwa, 1, 4)
 # rawplot -----------------------------------------------------------------
 
 
-rawplot = tm_shape(prez_powiaty) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+rawplot_pow = tm_shape(prez_powiaty) + 
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
 
 # hexplot -----------------------------------------------------------------
@@ -92,12 +101,13 @@ for (i in 1:6) {
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
-resulthex = assign_polygons(prez_powiaty, new_cells_hex)
+new_cells_hex_pow = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
+resulthex_pow = assign_polygons(prez_powiaty, new_cells_hex_pow)
 
-hexplot = tm_shape(resulthex) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+hexplot_pow = tm_shape(resulthex_pow) + 
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
 
 # regplot -----------------------------------------------------------------
@@ -108,88 +118,42 @@ for (i in 1:6) {
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
-resultreg = assign_polygons(prez_powiaty, new_cells_reg)
+new_cells_reg_pow = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
+resultreg_pow = assign_polygons(prez_powiaty, new_cells_reg_pow)
 
-regplot = tm_shape(resultreg) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
+regplot_pow = tm_shape(resultreg_pow) + 
+  tm_polygons("t1.duda", palette = "viridis", legend.show = FALSE) +
+  tm_text("Nazwa4") +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
-tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
+reglayout_pow = tm_shape(resultreg_pow) + tm_polygons("t1.duda", palette = "viridis") +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-
-```
-
-### Na przykładzie gmin
-```{r}
-
-prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
-prez_gminy = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_gminy$Nazwa4 = substr(prez_gminy$Nazwa, 1, 4)
-
-
-# rawplot -----------------------------------------------------------------
-
-
-rawplot = tm_shape(prez_gminy) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# hexplot -----------------------------------------------------------------
-
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_hex = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
-resulthex = assign_polygons(prez_gminy, new_cells_hex)
-
-hexplot = tm_shape(resulthex) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# regplot -----------------------------------------------------------------
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_reg = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
-resultreg = assign_polygons(prez_gminy, new_cells_reg)
-
-regplot = tm_shape(resultreg) + 
-  tm_polygons("t1.duda", palette = "viridis") +
-  tm_text("Nazwa4")
-
-tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
-
+tmap_arrange(rawplot_pow, hexplot_pow, regplot_pow, reglayout_pow, nrow = 1)
 
 ```
+
 
 
 ## Wizualizacja używając pakietu `cartogram`
 
-### Na przykładzie województw
 ```{r}
 library(cartogram)
 library(tmap)
 library(maptools)
 library(tidyverse)
 library(sf)
+```
 
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
+### Na przykładzie województw
+```{r}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_woj_cont = cartogram_cont(prez_woj, "t1.duda", 3)
+prez_woj_cont = cartogram_cont(prez_woj, "t1.duda", 8)
 
 # Non-contiguous Area Cartogram
 prez_woj_ncont = cartogram_ncont(prez_woj, "t1.duda")
@@ -198,37 +162,34 @@ prez_woj_ncont = cartogram_ncont(prez_woj, "t1.duda")
 prez_woj_dorling = cartogram_dorling(prez_woj, "t1.duda")
 
 # Plots
-m1 = tm_shape(prez_woj_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
+cont_woj = tm_shape(prez_woj_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
-m2 = tm_shape(prez_woj) + tm_borders() + 
+ncont_woj = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
+  tm_layout(frame = FALSE, legend.outside = TRUE)
 
-m3 = tm_shape(prez_woj) + tm_borders() + 
+dorling_woj = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml = tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
+layout_woj = tm_shape(prez_woj_dorling_woj) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
+tmap_arrange(cont_woj, ncont_woj, dorling_woj, layout_woj, nrow = 1)
+
 ```
 
-### Na przykładzie powiatów
-```{r}
-library(cartogram)
-library(tmap)
-library(maptools)
-library(tidyverse)
-library(sf)
 
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
-prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) %>%
+### Na przykładzie powiatów (shp is invalid)
+```{r}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
+prez_powiaty = read_sf(prez_p, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_powiaty_cont = cartogram_cont(prez_powiaty, "t1.duda", 3)
+prez_powiaty_cont = cartogram_cont(prez_powiaty, "t1.duda", 8)
 
 # Non-contiguous Area Cartogram
 prez_powiaty_ncont = cartogram_ncont(prez_powiaty, "t1.duda")
@@ -237,61 +198,23 @@ prez_powiaty_ncont = cartogram_ncont(prez_powiaty, "t1.duda")
 prez_powiaty_dorling = cartogram_dorling(prez_powiaty, "t1.duda")
 
 # Plots
-m1 = tm_shape(prez_powiaty_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
+cont_pow = tm_shape(prez_powiaty_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 = tm_shape(prez_powiaty) + tm_borders() + 
+ncont_pow = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 = tm_shape(prez_powiaty) + tm_borders() + 
+dorling_pow = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml = tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks") +
+layout_pow = tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
+tmap_arrange(cont_pow, ncont_pow, dorling_pow, layout_pow, nrow = 1)
 ```
 
-### Na przykładzie gmin
-```{r}
-library(cartogram)
-library(tmap)
-library(maptools)
-library(tidyverse)
-library(sf)
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
-prez_gminy = read_sf(prez, stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180)
-
-# Continuous Area Cartogram
-prez_gminy_cont = cartogram_cont(prez_gminy, "t1.duda", 3)
-
-# Non-contiguous Area Cartogram
-prez_gminy_ncont = cartogram_ncont(prez_gminy, "t1.duda")
-
-# Non-overlapping Circles Cartogram
-prez_gminy_dorling = cartogram_dorling(prez_gminy, "t1.duda")
-
-# Plots
-m1 = tm_shape(prez_gminy_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m2 = tm_shape(prez_gminy) + tm_borders() + 
-  tm_shape(prez_gminy_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m3 = tm_shape(prez_gminy) + tm_borders() + 
-  tm_shape(prez_gminy_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE, legend.outside = TRUE)
-
-ml = tm_shape(prez_gminy_dorling) + tm_polygons("t1.duda", style = "jenks") +
-  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
-
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
-```
 ## Wizualizacja używając pakietu `linemap`
 
 ### Na przykładzie województw
@@ -427,422 +350,3 @@ par(opar)
 
 
 
-## Zmienna `X2_frekw`
-
-
-## Wizualizacja używając pakietu `geogrid`
-
-### Na przykładzie województw
-```{r}
-library(geogrid)
-library(sf)
-library(tidyverse)
-library(tmap)
-
-prez1 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez1, stringsAsFactors=FALSE) 
-prez_woj$Nazwa4 = substr(prez_woj$Nazwa, 1, 4)
-
-
-# rawplot -----------------------------------------------------------------
-
-
-rawplot = tm_shape(prez_woj) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# hexplot -----------------------------------------------------------------
-
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_hex = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
-resulthex = assign_polygons(prez_woj, new_cells_hex)
-
-hexplot = tm_shape(resulthex) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# regplot -----------------------------------------------------------------
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_reg = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
-resultreg = assign_polygons(prez_woj, new_cells_reg)
-
-regplot = tm_shape(resultreg) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
-
-
-```
-
-### Na przykładzie powiatów
-```{r}
-
-prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
-prez_powiaty = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_powiaty$Nazwa4 = substr(prez_powiaty$Nazwa, 1, 4)
-
-
-# rawplot -----------------------------------------------------------------
-
-
-rawplot = tm_shape(prez_powiaty) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# hexplot -----------------------------------------------------------------
-
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_hex = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
-resulthex = assign_polygons(prez_powiaty, new_cells_hex)
-
-hexplot = tm_shape(resulthex) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# regplot -----------------------------------------------------------------
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_reg = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
-resultreg = assign_polygons(prez_powiaty, new_cells_reg)
-
-regplot = tm_shape(resultreg) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
-
-
-```
-
-### Na przykładzie gmin
-```{r}
-
-prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
-prez_gminy = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_gminy$Nazwa4 = substr(prez_gminy$Nazwa, 1, 4)
-
-
-# rawplot -----------------------------------------------------------------
-
-
-rawplot = tm_shape(prez_gminy) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# hexplot -----------------------------------------------------------------
-
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_hex = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
-resulthex = assign_polygons(prez_gminy, new_cells_hex)
-
-hexplot = tm_shape(resulthex) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-
-# regplot -----------------------------------------------------------------
-
-par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
-for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
-  plot(new_cells, main = paste("Seed", i, sep = " "))
-}
-
-new_cells_reg = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
-resultreg = assign_polygons(prez_gminy, new_cells_reg)
-
-regplot = tm_shape(resultreg) + 
-  tm_polygons("X2_frekw", palette = "viridis") +
-  tm_text("Nazwa4")
-
-tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
-
-
-```
-
-
-## Wizualizacja używając pakietu `cartogram`
-
-### Na przykładzie województw
-```{r}
-library(cartogram)
-library(tmap)
-library(maptools)
-library(tidyverse)
-library(sf)
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180)
-
-# Continuous Area Cartogram
-prez_woj_cont = cartogram_cont(prez_woj, "X2_frekw", 3)
-
-# Non-contiguous Area Cartogram
-prez_woj_ncont = cartogram_ncont(prez_woj, "X2_frekw")
-
-# Non-overlapping Circles Cartogram
-prez_woj_dorling = cartogram_dorling(prez_woj, "X2_frekw")
-
-# Plots
-m1 = tm_shape(prez_woj_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m2 = tm_shape(prez_woj) + tm_borders() + 
-  tm_shape(prez_woj_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m3 = tm_shape(prez_woj) + tm_borders() + 
-  tm_shape(prez_woj_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE, legend.outside = TRUE)
-
-ml = tm_shape(prez_woj_dorling) + tm_polygons("X2_frekw", style = "jenks") +
-  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
-
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
-```
-
-### Na przykładzie powiatów
-```{r}
-library(cartogram)
-library(tmap)
-library(maptools)
-library(tidyverse)
-library(sf)
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
-prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180)
-
-# Continuous Area Cartogram
-prez_powiaty_cont = cartogram_cont(prez_powiaty, "X2_frekw", 3)
-
-# Non-contiguous Area Cartogram
-prez_powiaty_ncont = cartogram_ncont(prez_powiaty, "X2_frekw")
-
-# Non-overlapping Circles Cartogram
-prez_powiaty_dorling = cartogram_dorling(prez_powiaty, "X2_frekw")
-
-# Plots
-m1 = tm_shape(prez_powiaty_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m2 = tm_shape(prez_powiaty) + tm_borders() + 
-  tm_shape(prez_powiaty_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m3 = tm_shape(prez_powiaty) + tm_borders() + 
-  tm_shape(prez_powiaty_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE, legend.outside = TRUE)
-
-ml = tm_shape(prez_powiaty_dorling) + tm_polygons("X2_frekw", style = "jenks") +
-  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
-
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
-```
-
-### Na przykładzie gmin
-```{r}
-library(cartogram)
-library(tmap)
-library(maptools)
-library(tidyverse)
-library(sf)
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
-prez_gminy = read_sf(prez, stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180)
-
-# Continuous Area Cartogram
-prez_gminy_cont = cartogram_cont(prez_gminy, "X2_frekw", 3)
-
-# Non-contiguous Area Cartogram
-prez_gminy_ncont = cartogram_ncont(prez_gminy, "X2_frekw")
-
-# Non-overlapping Circles Cartogram
-prez_gminy_dorling = cartogram_dorling(prez_gminy, "X2_frekw")
-
-# Plots
-m1 = tm_shape(prez_gminy_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m2 = tm_shape(prez_gminy) + tm_borders() + 
-  tm_shape(prez_gminy_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE)
-
-m3 = tm_shape(prez_gminy) + tm_borders() + 
-  tm_shape(prez_gminy_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
-  tm_layout(frame = FALSE, legend.outside = TRUE)
-
-ml = tm_shape(prez_gminy_dorling) + tm_polygons("X2_frekw", style = "jenks") +
-  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
-
-tmap_arrange(m1, m2, m3, ml, nrow = 1)
-```
-## Wizualizacja używając pakietu `linemap`
-
-### Na przykładzie województw
-```{r}
-library(sf)
-library(tidyverse)
-library(linemap)
-
-download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
-unzip("Wojewodztwa.zip")
-granice = read_sf("Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180) %>%
-  st_combine() 
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
-
-
-# LINEMAP -----------------------------------------------------------------
-
-
-grid = getgrid(x = prez_woj, cellsize = 4000, var = "X2_frekw")
-
-
-# wizualizacja 1 ------------------------------------------------------------
-
-
-tlo = par(mar=c(0,0,0,0), bg = "ivory2")
-plot(st_geometry(granice), col="ivory1", border = NA,
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 200, threshold = 0.00005,
-        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
-par(tlo)
-
-
-# wizualizacja 2 ------------------------------------------------------------
-
-opar = par(mar = c(0,0,0,0))
-plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
-        col = "lightblue3", border = "white", lwd = 0.6,
-        add = TRUE)
-par(opar)
-```
-
-### Na przykładzie powiatów
-```{r}
-library(sf)
-library(tidyverse)
-library(linemap)
-
-download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "Powiaty.zip")
-unzip("Powiaty.zip")
-granice = read_sf("Powiaty.shp", stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180) %>%
-  st_combine() 
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
-prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) 
-
-
-# LINEMAP -----------------------------------------------------------------
-
-
-grid = getgrid(x = prez_powiaty, cellsize = 4000, var = "X2_frekw")
-
-
-# wizualizacja 1 ------------------------------------------------------------
-
-
-tlo = par(mar=c(0,0,0,0), bg = "ivory2")
-plot(st_geometry(granice), col="ivory1", border = NA,
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 200, threshold = 0.00005,
-        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
-par(tlo)
-
-
-# wizualizacja 2 ------------------------------------------------------------
-
-opar = par(mar = c(0,0,0,0))
-plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
-        col = "lightblue3", border = "white", lwd = 0.6,
-        add = TRUE)
-par(opar)
-```
-### Na przykładzie gmin
-```{r}
-library(sf)
-library(tidyverse)
-library(linemap)
-
-download.file("https://www.gis-support.pl/downloads/Gminy.zip", "Gminy.zip")
-unzip("Gminy.zip")
-granice = read_sf("Gminy.shp", stringsAsFactors=FALSE) %>%
-  st_transform(crs = 2180) %>%
-  st_combine() 
-
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
-prez_gminy = read_sf(prez, stringsAsFactors=FALSE) 
-
-
-# LINEMAP -----------------------------------------------------------------
-
-
-grid = getgrid(x = prez_gminy, cellsize = 4000, var = "X2_frekw")
-
-
-# wizualizacja 1 ------------------------------------------------------------
-
-
-tlo = par(mar=c(0,0,0,0), bg = "ivory2")
-plot(st_geometry(granice), col="ivory1", border = NA,
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 200, threshold = 0.00005,
-        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
-par(tlo)
-
-
-# wizualizacja 2 ------------------------------------------------------------
-
-opar = par(mar = c(0,0,0,0))
-plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
-     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
-        col = "lightblue3", border = "white", lwd = 0.6,
-        add = TRUE)
-par(opar)
-```
