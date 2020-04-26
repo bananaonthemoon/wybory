@@ -17,15 +17,12 @@ library(tmap)
 
 prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
-prez_woj$Nazwa4 <- substr(prez_woj$Nazwa, 1, 4)
-```
+prez_woj$Nazwa4 = substr(prez_woj$Nazwa, 1, 4)
 
-### Na przykładzie województw
-```{r}
 # rawplot -----------------------------------------------------------------
 
 
-rawplot_woj <- tm_shape(prez_woj) + 
+rawplot_woj = tm_shape(prez_woj) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -35,14 +32,14 @@ rawplot_woj <- tm_shape(prez_woj) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex_woj <- calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
-resulthex_woj <- assign_polygons(prez_woj, new_cells_hex_woj)
+new_cells_hex_woj = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
+resulthex_woj = assign_polygons(prez_woj, new_cells_hex_woj)
 
-hexplot_woj <- tm_shape(resulthex_woj) + 
+hexplot_woj = tm_shape(resulthex_woj) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -51,14 +48,14 @@ hexplot_woj <- tm_shape(resulthex_woj) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells_woj <- calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
+  new_cells_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
   plot(new_cells_woj, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg_woj <- calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
-resultreg_woj <- assign_polygons(prez_woj, new_cells_reg_woj)
+new_cells_reg_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
+resultreg_woj = assign_polygons(prez_woj, new_cells_reg_woj)
 
-regplot_woj <- tm_shape(resultreg_woj) + 
+regplot_woj = tm_shape(resultreg_woj) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -67,18 +64,21 @@ tmap_arrange(rawplot_woj, hexplot_woj, regplot_woj, nrow = 3)
 
 ```
 
+do poprawienia
+
+
 ### Na przykładzie powiatów
 ```{r}
 
 prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
 prez_powiaty = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_powiaty$Nazwa4 <- substr(prez_powiaty$Nazwa, 1, 4)
+prez_powiaty$Nazwa4 = substr(prez_powiaty$Nazwa, 1, 4)
 
 
 # rawplot -----------------------------------------------------------------
 
 
-rawplot <- tm_shape(prez_powiaty) + 
+rawplot = tm_shape(prez_powiaty) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -88,14 +88,14 @@ rawplot <- tm_shape(prez_powiaty) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex <- calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
-resulthex <- assign_polygons(prez_powiaty, new_cells_hex)
+new_cells_hex = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
+resulthex = assign_polygons(prez_powiaty, new_cells_hex)
 
-hexplot <- tm_shape(resulthex) + 
+hexplot = tm_shape(resulthex) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -104,14 +104,14 @@ hexplot <- tm_shape(resulthex) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = i)
+  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg <- calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
-resultreg <- assign_polygons(prez_powiaty, new_cells_reg)
+new_cells_reg = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
+resultreg = assign_polygons(prez_powiaty, new_cells_reg)
 
-regplot <- tm_shape(resultreg) + 
+regplot = tm_shape(resultreg) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -125,13 +125,13 @@ tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
 
 prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
 prez_gminy = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_gminy$Nazwa4 <- substr(prez_gminy$Nazwa, 1, 4)
+prez_gminy$Nazwa4 = substr(prez_gminy$Nazwa, 1, 4)
 
 
 # rawplot -----------------------------------------------------------------
 
 
-rawplot <- tm_shape(prez_gminy) + 
+rawplot = tm_shape(prez_gminy) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -141,14 +141,14 @@ rawplot <- tm_shape(prez_gminy) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex <- calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
-resulthex <- assign_polygons(prez_gminy, new_cells_hex)
+new_cells_hex = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
+resulthex = assign_polygons(prez_gminy, new_cells_hex)
 
-hexplot <- tm_shape(resulthex) + 
+hexplot = tm_shape(resulthex) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -157,14 +157,14 @@ hexplot <- tm_shape(resulthex) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
+  new_cells = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg <- calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
-resultreg <- assign_polygons(prez_gminy, new_cells_reg)
+new_cells_reg = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
+resultreg = assign_polygons(prez_gminy, new_cells_reg)
 
-regplot <- tm_shape(resultreg) + 
+regplot = tm_shape(resultreg) + 
   tm_polygons("t1.duda", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -189,27 +189,27 @@ prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_woj_cont <- cartogram_cont(prez_woj, "t1.duda", 3)
+prez_woj_cont = cartogram_cont(prez_woj, "t1.duda", 3)
 
 # Non-contiguous Area Cartogram
-prez_woj_ncont <- cartogram_ncont(prez_woj, "t1.duda")
+prez_woj_ncont = cartogram_ncont(prez_woj, "t1.duda")
 
 # Non-overlapping Circles Cartogram
-prez_woj_dorling <- cartogram_dorling(prez_woj, "t1.duda")
+prez_woj_dorling = cartogram_dorling(prez_woj, "t1.duda")
 
 # Plots
-m1 <- tm_shape(prez_woj_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_woj_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_woj) + tm_borders() + 
+m2 = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_woj) + tm_borders() + 
+m3 = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
+ml = tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -228,27 +228,27 @@ prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_powiaty_cont <- cartogram_cont(prez_powiaty, "t1.duda", 3)
+prez_powiaty_cont = cartogram_cont(prez_powiaty, "t1.duda", 3)
 
 # Non-contiguous Area Cartogram
-prez_powiaty_ncont <- cartogram_ncont(prez_powiaty, "t1.duda")
+prez_powiaty_ncont = cartogram_ncont(prez_powiaty, "t1.duda")
 
 # Non-overlapping Circles Cartogram
-prez_powiaty_dorling <- cartogram_dorling(prez_powiaty, "t1.duda")
+prez_powiaty_dorling = cartogram_dorling(prez_powiaty, "t1.duda")
 
 # Plots
-m1 <- tm_shape(prez_powiaty_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_powiaty_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_powiaty) + tm_borders() + 
+m2 = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_powiaty) + tm_borders() + 
+m3 = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks") +
+ml = tm_shape(prez_powiaty_dorling) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -267,27 +267,27 @@ prez_gminy = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_gminy_cont <- cartogram_cont(prez_gminy, "t1.duda", 3)
+prez_gminy_cont = cartogram_cont(prez_gminy, "t1.duda", 3)
 
 # Non-contiguous Area Cartogram
-prez_gminy_ncont <- cartogram_ncont(prez_gminy, "t1.duda")
+prez_gminy_ncont = cartogram_ncont(prez_gminy, "t1.duda")
 
 # Non-overlapping Circles Cartogram
-prez_gminy_dorling <- cartogram_dorling(prez_gminy, "t1.duda")
+prez_gminy_dorling = cartogram_dorling(prez_gminy, "t1.duda")
 
 # Plots
-m1 <- tm_shape(prez_gminy_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_gminy_cont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_gminy) + tm_borders() + 
+m2 = tm_shape(prez_gminy) + tm_borders() + 
   tm_shape(prez_gminy_ncont) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_gminy) + tm_borders() + 
+m3 = tm_shape(prez_gminy) + tm_borders() + 
   tm_shape(prez_gminy_dorling) + tm_polygons("t1.duda", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_gminy_dorling) + tm_polygons("t1.duda", style = "jenks") +
+ml = tm_shape(prez_gminy_dorling) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -329,7 +329,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
@@ -373,7 +373,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
@@ -416,7 +416,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
@@ -441,13 +441,13 @@ library(tmap)
 
 prez1 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez1, stringsAsFactors=FALSE) 
-prez_woj$Nazwa4 <- substr(prez_woj$Nazwa, 1, 4)
+prez_woj$Nazwa4 = substr(prez_woj$Nazwa, 1, 4)
 
 
 # rawplot -----------------------------------------------------------------
 
 
-rawplot <- tm_shape(prez_woj) + 
+rawplot = tm_shape(prez_woj) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -457,14 +457,14 @@ rawplot <- tm_shape(prez_woj) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex <- calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
-resulthex <- assign_polygons(prez_woj, new_cells_hex)
+new_cells_hex = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
+resulthex = assign_polygons(prez_woj, new_cells_hex)
 
-hexplot <- tm_shape(resulthex) + 
+hexplot = tm_shape(resulthex) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -473,14 +473,14 @@ hexplot <- tm_shape(resulthex) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg <- calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
-resultreg <- assign_polygons(prez_woj, new_cells_reg)
+new_cells_reg = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
+resultreg = assign_polygons(prez_woj, new_cells_reg)
 
-regplot <- tm_shape(resultreg) + 
+regplot = tm_shape(resultreg) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -494,13 +494,13 @@ tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
 
 prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
 prez_powiaty = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_powiaty$Nazwa4 <- substr(prez_powiaty$Nazwa, 1, 4)
+prez_powiaty$Nazwa4 = substr(prez_powiaty$Nazwa, 1, 4)
 
 
 # rawplot -----------------------------------------------------------------
 
 
-rawplot <- tm_shape(prez_powiaty) + 
+rawplot = tm_shape(prez_powiaty) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -510,14 +510,14 @@ rawplot <- tm_shape(prez_powiaty) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex <- calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
-resulthex <- assign_polygons(prez_powiaty, new_cells_hex)
+new_cells_hex = calculate_grid(shape = prez_powiaty, grid_type = "hexagonal", seed = 2)
+resulthex = assign_polygons(prez_powiaty, new_cells_hex)
 
-hexplot <- tm_shape(resulthex) + 
+hexplot = tm_shape(resulthex) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -526,14 +526,14 @@ hexplot <- tm_shape(resulthex) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = i)
+  new_cells = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg <- calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
-resultreg <- assign_polygons(prez_powiaty, new_cells_reg)
+new_cells_reg = calculate_grid(shape = prez_powiaty, grid_type = "regular", seed = 2)
+resultreg = assign_polygons(prez_powiaty, new_cells_reg)
 
-regplot <- tm_shape(resultreg) + 
+regplot = tm_shape(resultreg) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -547,13 +547,13 @@ tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
 
 prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
 prez_gminy = read_sf(prez2, stringsAsFactors=FALSE) 
-prez_gminy$Nazwa4 <- substr(prez_gminy$Nazwa, 1, 4)
+prez_gminy$Nazwa4 = substr(prez_gminy$Nazwa, 1, 4)
 
 
 # rawplot -----------------------------------------------------------------
 
 
-rawplot <- tm_shape(prez_gminy) + 
+rawplot = tm_shape(prez_gminy) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -563,14 +563,14 @@ rawplot <- tm_shape(prez_gminy) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_hex <- calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
-resulthex <- assign_polygons(prez_gminy, new_cells_hex)
+new_cells_hex = calculate_grid(shape = prez_gminy, grid_type = "hexagonal", seed = 2)
+resulthex = assign_polygons(prez_gminy, new_cells_hex)
 
-hexplot <- tm_shape(resulthex) + 
+hexplot = tm_shape(resulthex) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -579,14 +579,14 @@ hexplot <- tm_shape(resulthex) +
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells <- calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
+  new_cells = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
-new_cells_reg <- calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
-resultreg <- assign_polygons(prez_gminy, new_cells_reg)
+new_cells_reg = calculate_grid(shape = prez_gminy, grid_type = "regular", seed = 2)
+resultreg = assign_polygons(prez_gminy, new_cells_reg)
 
-regplot <- tm_shape(resultreg) + 
+regplot = tm_shape(resultreg) + 
   tm_polygons("X2_frekw", palette = "viridis") +
   tm_text("Nazwa4")
 
@@ -611,27 +611,27 @@ prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_woj_cont <- cartogram_cont(prez_woj, "X2_frekw", 3)
+prez_woj_cont = cartogram_cont(prez_woj, "X2_frekw", 3)
 
 # Non-contiguous Area Cartogram
-prez_woj_ncont <- cartogram_ncont(prez_woj, "X2_frekw")
+prez_woj_ncont = cartogram_ncont(prez_woj, "X2_frekw")
 
 # Non-overlapping Circles Cartogram
-prez_woj_dorling <- cartogram_dorling(prez_woj, "X2_frekw")
+prez_woj_dorling = cartogram_dorling(prez_woj, "X2_frekw")
 
 # Plots
-m1 <- tm_shape(prez_woj_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_woj_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_woj) + tm_borders() + 
+m2 = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_woj) + tm_borders() + 
+m3 = tm_shape(prez_woj) + tm_borders() + 
   tm_shape(prez_woj_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_woj_dorling) + tm_polygons("X2_frekw", style = "jenks") +
+ml = tm_shape(prez_woj_dorling) + tm_polygons("X2_frekw", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -650,27 +650,27 @@ prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_powiaty_cont <- cartogram_cont(prez_powiaty, "X2_frekw", 3)
+prez_powiaty_cont = cartogram_cont(prez_powiaty, "X2_frekw", 3)
 
 # Non-contiguous Area Cartogram
-prez_powiaty_ncont <- cartogram_ncont(prez_powiaty, "X2_frekw")
+prez_powiaty_ncont = cartogram_ncont(prez_powiaty, "X2_frekw")
 
 # Non-overlapping Circles Cartogram
-prez_powiaty_dorling <- cartogram_dorling(prez_powiaty, "X2_frekw")
+prez_powiaty_dorling = cartogram_dorling(prez_powiaty, "X2_frekw")
 
 # Plots
-m1 <- tm_shape(prez_powiaty_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_powiaty_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_powiaty) + tm_borders() + 
+m2 = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_powiaty) + tm_borders() + 
+m3 = tm_shape(prez_powiaty) + tm_borders() + 
   tm_shape(prez_powiaty_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_powiaty_dorling) + tm_polygons("X2_frekw", style = "jenks") +
+ml = tm_shape(prez_powiaty_dorling) + tm_polygons("X2_frekw", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -689,27 +689,27 @@ prez_gminy = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 # Continuous Area Cartogram
-prez_gminy_cont <- cartogram_cont(prez_gminy, "X2_frekw", 3)
+prez_gminy_cont = cartogram_cont(prez_gminy, "X2_frekw", 3)
 
 # Non-contiguous Area Cartogram
-prez_gminy_ncont <- cartogram_ncont(prez_gminy, "X2_frekw")
+prez_gminy_ncont = cartogram_ncont(prez_gminy, "X2_frekw")
 
 # Non-overlapping Circles Cartogram
-prez_gminy_dorling <- cartogram_dorling(prez_gminy, "X2_frekw")
+prez_gminy_dorling = cartogram_dorling(prez_gminy, "X2_frekw")
 
 # Plots
-m1 <- tm_shape(prez_gminy_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
+m1 = tm_shape(prez_gminy_cont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m2 <- tm_shape(prez_gminy) + tm_borders() + 
+m2 = tm_shape(prez_gminy) + tm_borders() + 
   tm_shape(prez_gminy_ncont) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE)
 
-m3 <- tm_shape(prez_gminy) + tm_borders() + 
+m3 = tm_shape(prez_gminy) + tm_borders() + 
   tm_shape(prez_gminy_dorling) + tm_polygons("X2_frekw", style = "jenks", legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ml <- tm_shape(prez_gminy_dorling) + tm_polygons("X2_frekw", style = "jenks") +
+ml = tm_shape(prez_gminy_dorling) + tm_polygons("X2_frekw", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 tmap_arrange(m1, m2, m3, ml, nrow = 1)
@@ -751,7 +751,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
@@ -795,7 +795,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
@@ -838,7 +838,7 @@ par(tlo)
 
 # wizualizacja 2 ------------------------------------------------------------
 
-opar <- par(mar = c(0,0,0,0))
+opar = par(mar = c(0,0,0,0))
 plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
 linemap(x = grid, var = "X2_frekw", k = 5000, threshold = 0.000005,
