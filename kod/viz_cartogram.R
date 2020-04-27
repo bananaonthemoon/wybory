@@ -4,7 +4,7 @@ library(tmaptools)
 library(tidyverse)
 library(sf)
 
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiat_demo.gpkg"
 
 prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
@@ -48,7 +48,7 @@ bb = bb(prez_woj, ext = 1.05)
 paleta_duda = get_brewer_pal("YlOrRd", n = 5, contrast = c(0.15, 0.7))
 
 # Continuous Area Cartogram
-map_1 = tm_shape(granica, bbox = bb) +
+map_1_duda = tm_shape(granica, bbox = bb) +
   tm_polygons(border.col = "white", col = "gray85") +
 tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
@@ -57,7 +57,7 @@ tm_shape(prez_woj_cont) +
 tm_scale_bar(position = c("left", "bottom")) +
 tm_layout(bg.color = "lightcyan2")
 
-map_2 = tm_shape(granica, bbox = bb) +
+map_2_duda = tm_shape(granica, bbox = bb) +
 tm_polygons(border.col = "white", col = "gray85") +
   tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
@@ -66,8 +66,7 @@ tm_shape(prez_woj_ncont) +
 tm_scale_bar(position = c("left", "bottom")) +
 tm_layout(bg.color = "lightcyan2")
 
-#map_3 = 
-tm_shape(granica, bbox = bb) +
+map_3_duda = tm_shape(granica, bbox = bb) +
   tm_polygons(border.col = "white", col = "gray85") +
 tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
@@ -76,63 +75,91 @@ tm_shape(prez_woj_dorling) +
 tm_scale_bar(position = c("left", "bottom")) +
 tm_layout(bg.color = "lightcyan2")
 
-ml = tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
+ml_duda = tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-#tmap_arrange(map_1, map_2, map_3, ml, nrow = 1)
+#tmap_arrange(map_1_duda, map_2_duda, map_3_duda, ml_duda, nrow = 1)
 
 
-# 1_frekw ----------------------------------------------------------------
-
+# f1 ----------------------------------------------------------------
 
 
 # Continuous Area Cartogram
-prez_woj_cont_1_frekw = cartogram_cont(prez_woj, "1_frekw", 10)
+prez_woj_cont_f1 = cartogram_cont(prez_woj, "f1", 10)
 
 # Non-contiguous Area Cartogram
-prez_woj_ncont_1_frekw = cartogram_ncont(prez_woj, "1_frekw")
+prez_woj_ncont_f1 = cartogram_ncont(prez_woj, "f1")
 
 # Non-overlapping Circles Cartogram
-prez_woj_dorling_1_frekw = cartogram_dorling(prez_woj, "1_frekw")
+prez_woj_dorling_f1 = cartogram_dorling(prez_woj, "f1")
 
 
-# Plots
+# Plots pojedyncze --------------------------------------------------------
+
 
 tmaptools::palette_explorer()
 
 # Bounding box dla Polski
 bb = bb(prez_woj, ext = 1.05)
 
-paleta_1_frekw = get_brewer_pal("YlOrRd", n = 5, contrast = c(0.15, 0.7))
+paleta_f1 = get_brewer_pal("YlOrRd", n = 5, contrast = c(0.15, 0.7))
 
 # Continuous Area Cartogram
-map_1 = tm_shape(granica, bbox = bb) +
+map_1_f1 = tm_shape(granica, bbox = bb) +
   tm_polygons(border.col = "white", col = "gray85") +
   tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
-  tm_shape(prez_woj_cont_1_frekw) +
-  tm_polygons("1_frekw", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_shape(prez_woj_cont_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
   tm_scale_bar(position = c("left", "bottom")) +
   tm_layout(bg.color = "lightcyan2")
 
-map_2 = tm_shape(granica, bbox = bb) +
+map_2_f1 = tm_shape(granica, bbox = bb) +
   tm_polygons(border.col = "white", col = "gray85") +
   tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
-  tm_shape(prez_woj_ncont_1_frekw) +
-  tm_polygons("1_frekw", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_shape(prez_woj_ncont_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
   tm_scale_bar(position = c("left", "bottom")) +
   tm_layout(bg.color = "lightcyan2")
 
-#map_3 = 
-tm_shape(granica, bbox = bb) +
+map_3_f1 = tm_shape(granica, bbox = bb) +
   tm_polygons(border.col = "white", col = "gray85") +
   tm_shape(bord) +
   tm_polygons(border.col = "white", col = "gray85") +
-  tm_shape(prez_woj_dorling_1_frekw) +
-  tm_polygons("1_frekw", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_shape(prez_woj_dorling_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
   tm_scale_bar(position = c("left", "bottom")) +
   tm_layout(bg.color = "lightcyan2")
 
-ml = tm_shape(prez_woj_dorling_1_frekw) + tm_polygons("1_frekw", style = "jenks") +
+ml_f1 = tm_shape(prez_woj_dorling_f1) + tm_polygons("f1", style = "jenks") +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+#tmap_arrange(map_1_duda, map_2_duda, map_3_duda, ml_duda, nrow = 1)
+
+
+# Plots razem -------------------------------------------------------------
+
+
+m1 = tm_shape(granica, bbox = bb) +
+  tm_polygons(border.col = "white", col = "gray85") +
+  tm_shape(prez_woj_cont_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_scale_bar(position = c("left", "bottom"))
+
+m2 = tm_shape(granica, bbox = bb) +
+  tm_polygons(border.col = "white", col = "gray85") +
+  tm_shape(prez_woj_ncont_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_scale_bar(position = c("left", "bottom"))
+
+m3 = tm_shape(granica, bbox = bb) +
+  tm_polygons(border.col = "white", col = "gray85") +
+  tm_shape(prez_woj_dorling_f1) +
+  tm_polygons("f1", style = "jenks", border.col = "White", border.alpha = 0.1, palette = paleta_duda) +
+  tm_scale_bar(position = c("left", "bottom"))
+
+ml = tm_shape(prez_woj_dorling_f1) + tm_polygons("f1", style = "jenks") +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+tmap_arrange(m1, m2, m3, ml, nrow = 1)

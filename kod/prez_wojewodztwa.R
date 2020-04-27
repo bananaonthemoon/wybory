@@ -9,6 +9,7 @@
 
 library(tidyverse)
 library(readxl)
+library(writexl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
 download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/temp/prezydent_2015_tura1.zip")
@@ -49,6 +50,8 @@ names(tura2) = paste("t2_", names(tura2), sep="")
 
 obie_tury = merge(tura1, tura2, by.x="t1_Group.1", by.y="t2_Group.1")
 
+write_xlsx(obie_tury, path = "dane/dane_woj.xlsx")
+
 
 # Jednostki ewidencyjne ---------------------------------------------------
 
@@ -87,20 +90,24 @@ woj1$Nazwa = toupper(woj1$JPT_NAZWA_)
 prez_woj = merge(woj1, obie_tury, by.x="kod2", by.y="t1_Group.1")
 
 # Obliczenie frekfencji oraz wyników kandydatów
-prez_woj$"1_frekw" = with(prez_woj, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-prez_woj$"2_frekw" = with(prez_woj, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-prez_woj$f1.duda = with(prez_woj, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f2.duda = with(prez_woj, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
-prez_woj$f1.komo = with(prez_woj,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f2.komo = with(prez_woj,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
-prez_woj$f1.braun = with(prez_woj,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.jarubas = with(prez_woj,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.korwin = with(prez_woj,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.kowalski = with(prez_woj,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.kukiz = with(prez_woj,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.ogorek = with(prez_woj,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.palikot = with(prez_woj,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.tanajo = with(prez_woj,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
-prez_woj$f1.Wilk = with(prez_woj,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+prez_woj$"f1" = with(prez_woj, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_woj$"f2" = with(prez_woj, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_woj$t1.duda = with(prez_woj, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t2.duda = with(prez_woj, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
+prez_woj$t1.komo = with(prez_woj,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t2.komo = with(prez_woj,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
+prez_woj$t1.braun = with(prez_woj,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.jarubas = with(prez_woj,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.korwin = with(prez_woj,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.kowalski = with(prez_woj,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.kukiz = with(prez_woj,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.ogorek = with(prez_woj,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.palikot = with(prez_woj,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.tanajo = with(prez_woj,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
+prez_woj$t1.Wilk = with(prez_woj,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
 write_sf(prez_woj, dsn = "dane/prez_woj.gpkg")
+
+prez_woj_demo = prez_woj %>% select(-c(1:2,4:21))
+
+write_sf(prez_woj_demo, dsn = "dane/prez_woj_demo.gpkg")

@@ -9,6 +9,7 @@
 
 library(tidyverse)
 library(readxl)
+library(writexl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
 download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/temp/prezydent_2015_tura1.zip")
@@ -49,6 +50,8 @@ names(tura2) = paste("t2_", names(tura2), sep="")
 
 obie_tury = merge(tura1, tura2, by.x="t1_Group.1", by.y="t2_Group.1")
 
+write_xlsx(obie_tury, path = "dane/dane_powiaty.xlsx")
+
 
 # Jednostki ewidencyjne ---------------------------------------------------
 
@@ -88,8 +91,8 @@ prez_powiat = merge(powiat1, obie_tury, by.x="kod4", by.y="t1_Group.1") %>%
   select(-c(1:2))
 
 # Obliczenie frekfencji oraz wyników kandydatów
-prez_powiat$"1_frekw" = with(prez_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-prez_powiat$"2_frekw" = with(prez_powiat, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_powiat$f1 = with(prez_powiat, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
+prez_powiat$f2 = with(prez_powiat, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
 prez_powiat$t1.duda = with(prez_powiat, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
 prez_powiat$t2.duda = with(prez_powiat, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
 prez_powiat$t1.komo = with(prez_powiat,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
@@ -102,11 +105,11 @@ prez_powiat$t1.kukiz = with(prez_powiat,  t1_Paweł.Piotr.Kukiz / t1_Liczba.gło
 prez_powiat$t1.ogorek = with(prez_powiat,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
 prez_powiat$t1.palikot = with(prez_powiat,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
 prez_powiat$t1.tanajo = with(prez_powiat,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
-prez_powiat$t1.Wilk = with(prez_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
+prez_powiat$t1.wilk = with(prez_powiat,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
 
 
 write_sf(prez_powiat, dsn = "dane/prez_powiaty.gpkg")
 
 prez_powiat_demo = prez_powiat %>% select(-c(2:18))
 
-write_sf(prez_powiat_demo, dsn = "dane/prez_powiat_demo.gpkg")
+write_sf(prez_powiat_demo, dsn = "dane/prez_powiaty_demo.gpkg")
