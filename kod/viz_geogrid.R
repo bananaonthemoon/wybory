@@ -3,7 +3,7 @@ library(sf)
 library(tidyverse)
 library(tmap)
 
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj_demo.gpkg"
 prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
 prez_woj$Nazwa4 <- substr(prez_woj$Nazwa, 1, 4)
 
@@ -49,4 +49,3 @@ regplot <- tm_shape(resultreg) +
   tm_text("Nazwa4")
 
 tmap_arrange(rawplot, hexplot, regplot, nrow = 3)
-

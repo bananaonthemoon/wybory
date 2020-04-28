@@ -4,7 +4,7 @@ library(tmaptools)
 library(tidyverse)
 library(sf)
 
-prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiat_demo.gpkg"
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty_demo.gpkg"
 
 prez_woj = read_sf(prez, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
@@ -85,7 +85,7 @@ ml_duda = tm_shape(prez_woj_dorling) + tm_polygons("t1.duda", style = "jenks") +
 
 
 # Continuous Area Cartogram
-prez_woj_cont_f1 = cartogram_cont(prez_woj, "f1", 10)
+prez_woj_cont_f1 = cartogram_cont(prez_woj, "f1", 15)
 
 # Non-contiguous Area Cartogram
 prez_woj_ncont_f1 = cartogram_ncont(prez_woj, "f1")
