@@ -58,6 +58,7 @@ write_xlsx(obie_tury, path = "dane/dane_powiaty.xlsx")
 
 library(sf)
 library(rmapshaper)
+library(lwgeom)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
 download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "dane/temp/Powiaty.zip")
@@ -70,7 +71,9 @@ powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
 powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 powiat$geometry = powiat_simp$geometry
 write_sf(powiat, dsn = "dane/temp/powiat.gpkg", driver = "GPKG")
-powiat = read_sf("dane/temp/powiat.gpkg", stringsAsFactors=FALSE)
+powiat = read_sf("dane/temp/powiat.gpkg", stringsAsFactors=FALSE) 
+
+#isnt valid, próbowałam użyć st_make_valid ale nie działa
 
 
 # Czyszczenie danych ------------------------------------------------------

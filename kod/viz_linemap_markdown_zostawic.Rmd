@@ -1,0 +1,142 @@
+---
+title: "viz_markdown"
+author: "Maria_Król"
+date: "9 04 2020"
+output: html_document
+---
+
+## Wizualizacja używając pakietu `linemap`
+
+### Na przykładzie województw
+```{r}
+library(sf)
+library(tidyverse)
+library(linemap)
+
+download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "Wojewodztwa.zip")
+unzip("Wojewodztwa.zip")
+granice = read_sf("Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_combine() 
+
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
+
+
+# LINEMAP -----------------------------------------------------------------
+
+
+grid = getgrid(x = prez_woj, cellsize = 4000, var = "t1.duda")
+
+
+# wizualizacja 1 ------------------------------------------------------------
+
+
+tlo = par(mar=c(0,0,0,0), bg = "ivory2")
+plot(st_geometry(granice), col="ivory1", border = NA,
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 200, threshold = 0.00005,
+        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
+par(tlo)
+
+
+# wizualizacja 2 ------------------------------------------------------------
+
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
+        col = "lightblue3", border = "white", lwd = 0.6,
+        add = TRUE)
+par(opar)
+```
+
+### Na przykładzie powiatów
+```{r}
+library(sf)
+library(tidyverse)
+library(linemap)
+
+download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "Powiaty.zip")
+unzip("Powiaty.zip")
+granice = read_sf("Powiaty.shp", stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_combine() 
+
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
+prez_powiaty = read_sf(prez, stringsAsFactors=FALSE) 
+
+
+# LINEMAP -----------------------------------------------------------------
+
+
+grid = getgrid(x = prez_powiaty, cellsize = 4000, var = "t1.duda")
+
+
+# wizualizacja 1 ------------------------------------------------------------
+
+
+tlo = par(mar=c(0,0,0,0), bg = "ivory2")
+plot(st_geometry(granice), col="ivory1", border = NA,
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 200, threshold = 0.00005,
+        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
+par(tlo)
+
+
+# wizualizacja 2 ------------------------------------------------------------
+
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
+        col = "lightblue3", border = "white", lwd = 0.6,
+        add = TRUE)
+par(opar)
+```
+### Na przykładzie gmin
+```{r}
+library(sf)
+library(tidyverse)
+library(linemap)
+
+download.file("https://www.gis-support.pl/downloads/Gminy.zip", "Gminy.zip")
+unzip("Gminy.zip")
+granice = read_sf("Gminy.shp", stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_combine() 
+
+prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_gminy.gpkg"
+prez_gminy = read_sf(prez, stringsAsFactors=FALSE) 
+
+
+# LINEMAP -----------------------------------------------------------------
+
+
+grid = getgrid(x = prez_gminy, cellsize = 4000, var = "t1.duda")
+
+
+# wizualizacja 1 ------------------------------------------------------------
+
+
+tlo = par(mar=c(0,0,0,0), bg = "ivory2")
+plot(st_geometry(granice), col="ivory1", border = NA,
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 200, threshold = 0.00005,
+        col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
+par(tlo)
+
+
+# wizualizacja 2 ------------------------------------------------------------
+
+opar = par(mar = c(0,0,0,0))
+plot(st_geometry(granice), col="lightblue3", border = NA, bg = "lightblue2",
+     xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
+linemap(x = grid, var = "t1.duda", k = 5000, threshold = 0.000005,
+        col = "lightblue3", border = "white", lwd = 0.6,
+        add = TRUE)
+par(opar)
+```
+
+
+
