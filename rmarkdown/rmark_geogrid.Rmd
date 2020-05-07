@@ -1,0 +1,236 @@
+---
+title: "viz_markdown"
+author: "Maria_Król"
+date: "9 04 2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Pakiet `geogrid`
+
+```{r geogrid_biblioteki, message=FALSE, warning=FALSE}
+
+library(geogrid)
+library(sf)
+library(tidyverse)
+library(tmap)
+library(tmaptools)
+
+```
+
+### Na przykładzie województw
+```{r geogrid_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE)
+
+```
+
+```{r geogrid_wojewodztwa_obliczenia_hexplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_woj = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
+resulthex_woj = assign_polygons(prez_woj, new_cells_hex_woj)
+
+```
+
+```{r geogrid_wojewodztwa_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
+  plot(new_cells_woj, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
+resultreg_woj = assign_polygons(prez_woj, new_cells_reg_woj)
+
+```
+
+```{r geogrid_wojewodztwa_palety, message=FALSE, warning=FALSE}
+
+paleta_blue = get_brewer_pal("Blues")
+paleta_orange = get_brewer_pal("Oranges")
+
+```
+
+```{r geogrid_wojewodztwa_rawplot, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+rawplot_woj_duda = tm_shape(prez_woj) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+rawplot_woj_frek = tm_shape(prez_woj) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wojewodztwa_hexplot, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+hexplot_woj_duda = tm_shape(resulthex_woj) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+hexplot_woj_frek = tm_shape(resulthex_woj) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wojewodztwa_regplot, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+regplot_woj_duda = tm_shape(resultreg_woj) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+regplot_woj_frek = tm_shape(resultreg_woj) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wojewodztwa_layout, message=FALSE, warning=FALSE}
+# layout -----------------------------------------------------------------
+
+layout_woj_duda = tm_shape(resultreg_woj) + tm_fill("t1.duda", palette = paleta_blue) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+layout_woj_frek = tm_shape(resultreg_woj) + tm_fill("f1", palette = paleta_orange) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+```
+
+```{r geogrid_wojewodztwa_wynik, message = FALSE, warning = FALSE}
+
+tmap_arrange(rawplot_woj_duda, hexplot_woj_duda, regplot_woj_duda, layout_woj_duda, rawplot_woj_frek, hexplot_woj_frek, regplot_woj_frek, layout_woj_frek, nrow = 2)
+
+```
+
+### Na przykładzie powiatów
+```{r geogrid_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE)
+
+```
+
+```{r geogrid_powiaty_obliczenia_hexplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_pow, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_pow = calculate_grid(shape = prez_pow, grid_type = "hexagonal", seed = 2)
+resulthex_pow = assign_polygons(prez_pow, new_cells_hex_pow)
+
+```
+
+```{r geogrid_powiaty_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells_pow = calculate_grid(shape = prez_pow, grid_type = "regular", seed = i)
+  plot(new_cells_pow, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_pow = calculate_grid(shape = prez_pow, grid_type = "regular", seed = 2)
+resultreg_pow = assign_polygons(prez_pow, new_cells_reg_pow)
+
+```
+
+```{r geogrid_powiaty_palety, message=FALSE, warning=FALSE}
+
+paleta_blue = get_brewer_pal("Blues")
+paleta_orange = get_brewer_pal("Oranges")
+
+```
+
+```{r geogrid_powiaty_rawplot, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+rawplot_pow_duda = tm_shape(prez_pow) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+rawplot_pow_frek = tm_shape(prez_pow) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_powiaty_hexplot, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+hexplot_pow_duda = tm_shape(resulthex_pow) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+hexplot_pow_frek = tm_shape(resulthex_pow) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_powiaty_regplot, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+regplot_pow_duda = tm_shape(resultreg_pow) + 
+  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+regplot_pow_frek = tm_shape(resultreg_pow) + 
+  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_powiaty_layout, message=FALSE, warning=FALSE}
+# layout -----------------------------------------------------------------
+
+layout_pow_duda = tm_shape(resultreg_pow) + tm_fill("t1.duda", palette = paleta_blue) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+layout_pow_frek = tm_shape(resultreg_pow) + tm_fill("f1", palette = paleta_orange) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+```
+
+```{r geogrid_powiaty_wynik, message = FALSE, warning = FALSE}
+
+tmap_arrange(rawplot_pow_duda, hexplot_pow_duda, regplot_pow_duda, layout_pow_duda, rawplot_pow_frek, hexplot_pow_frek, regplot_pow_frek, layout_pow_frek, nrow = 2)
+
+```
