@@ -1,0 +1,113 @@
+---
+title: "rmark_cartogram"
+author: "Maria_Król"
+date: "7 05 2020"
+output: html_document
+---
+
+## Pakiet `cartogram`
+
+```{r cartogram_biblioteki, message=FALSE, warning=FALSE}
+
+library(cartogram)
+library(tmap)
+library(maptools)
+library(tidyverse)
+library(sf)
+library(tmaptools)
+
+```
+
+### Na przykładzie województw
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_wojewodztwa_obliczenia, cache = TRUE, warning = FALSE}
+
+# Continuous Area Cartogram
+prez_woj_cont_duda = cartogram_cont(prez_woj, "t1.duda", 8)
+prez_woj_cont_frek = cartogram_cont(prez_woj, "f1", 8)
+
+# Non-contiguous Area Cartogram
+prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t1.duda")
+prez_woj_ncont_frek = cartogram_ncont(prez_woj, "f1")
+
+# Non-overlapping Circles Cartogram
+prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t1.duda")
+prez_woj_dorling_frek = cartogram_dorling(prez_woj, "f1")
+
+```
+
+```{r cartogram_wojewodztwa_palety, message=FALSE, warning=FALSE}
+
+paleta_red = get_brewer_pal("Reds")
+paleta_green = get_brewer_pal("Greens")
+
+```
+
+```{r cartogram_wojewodztwa_continuous, message=FALSE, warning=FALSE}
+
+cont_woj_duda = tm_shape(prez_woj_cont_duda) + 
+  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+cont_woj_frek = tm_shape(prez_woj_cont_frek) + 
+  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wojewodztwa_noncontinuous, message=FALSE, warning=FALSE}
+
+ncont_woj_duda = tm_shape(prez_woj) + 
+  tm_borders() + 
+  tm_shape(prez_woj_ncont_duda) + 
+  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+ncont_woj_frek = tm_shape(prez_woj) + 
+  tm_borders() + 
+  tm_shape(prez_woj_ncont_frek) + 
+  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wojewodztwa_nonoverlapping, message=FALSE, warning=FALSE}
+
+dorling_woj_duda = tm_shape(prez_woj) + 
+  tm_borders() + 
+  tm_shape(prez_woj_dorling_duda) + 
+  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+dorling_woj_frek = tm_shape(prez_woj) + 
+  tm_borders() + 
+  tm_shape(prez_woj_dorling_frek) + 
+  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wojewodztwa_layout, message=FALSE, warning=FALSE}
+
+layout_woj_duda = tm_shape(prez_woj_dorling_duda) + 
+  tm_polygons("t1.duda", style = "jenks", palette = paleta_red) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+layout_woj_frek = tm_shape(prez_woj_dorling_frek) + 
+  tm_polygons("f1", style = "jenks", palette = paleta_green) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+```
+
+```{r cartogram_wojewodztwa_wynik, message=FALSE, warning=FALSE}
+
+tmap_arrange(cont_woj_duda, ncont_woj_duda, dorling_woj_duda, layout_woj_duda, cont_woj_frek, ncont_woj_frek, dorling_woj_frek, layout_woj_frek, nrow = 2)
+
+```
