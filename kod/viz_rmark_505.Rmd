@@ -9,7 +9,7 @@ editor_options:
 
 ## Wizualizacja używając pakietu `geogrid`
 
-```{r geogrid_biblioteki, echo=FALSE}
+```{r geogrid_biblioteki, message=FALSE, warning=FALSE, results=FALSE}
 
 library(geogrid)
 library(sf)
@@ -20,7 +20,7 @@ library(tmaptools)
 ```
 
 ### Na przykładzie województw
-```{r geogrid_wojewodztwa, results = 'hide'}
+```{r geogrid_wojewodztwa, message=FALSE, warning=FALSE, results=FALSE}
 
 prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez, stringsAsFactors=FALSE)
@@ -85,14 +85,14 @@ reglayout_woj_frek = tm_shape(resultreg_woj) + tm_polygons("f1", palette = get_b
 
 ```
 
-```{r geogrid_wojewodztwa_wyniki}
+```{r geogrid_wojewodztwa_wynik, message=FALSE, warning=FALSE}
 
 tmap_arrange(rawplot_woj_duda, hexplot_woj_duda, regplot_woj_duda, reglayout_woj_duda, rawplot_woj_frek, hexplot_woj_frek, regplot_woj_frek, reglayout_woj_frek, nrow = 2)
 
 ```
 
 ## Na przykładzie powiatów
-```{r geogrid_powiaty, results = 'hide'}
+```{r geogrid_powiaty, message=FALSE, warning=FALSE, results=FALSE}
 
 prez2 = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
 prez_powiaty = read_sf(prez2, stringsAsFactors=FALSE)
@@ -158,7 +158,7 @@ reglayout_pow_frek = tm_shape(resultreg_pow) + tm_polygons("f1", style = "jenks"
 
 ```
 
-```{r geogrid_powiaty_wyniki}
+```{r geogrid_powiaty_wynik, message=FALSE, warning=FALSE}
 
 tmap_arrange(rawplot_pow_duda, hexplot_pow_duda, regplot_pow_duda, reglayout_pow_duda, rawplot_pow_frek, hexplot_pow_frek, regplot_pow_frek, reglayout_pow_frek, nrow = 2)
 
@@ -166,18 +166,19 @@ tmap_arrange(rawplot_pow_duda, hexplot_pow_duda, regplot_pow_duda, reglayout_pow
 
 
 ## Wizualizacja używając pakietu `cartogram`
+```{r cartogram_biblioteki, message=FALSE, warning=FALSE}
 
-```{r cartogram_biblioteki}
 library(cartogram)
 library(tmap)
 library(maptools)
 library(tidyverse)
 library(sf)
 library(tmaptools)
+
 ```
 
 ### Na przykładzie województw
-```{r cartogram_wojewodztwa, results='hide'}
+```{r cartogram_wojewodztwa, message=FALSE, warning=FALSE, results=FALSE}
 
 prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
@@ -223,14 +224,16 @@ layout_woj_duda = tm_shape(prez_woj_dorling_duda) + tm_polygons("t1.duda", style
 
 layout_woj_frek = tm_shape(prez_woj_dorling_frek) + tm_polygons("f1", style = "jenks", palette = get_brewer_pal("Greens")) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
 ```
 
-```{r cartogram_wojewodztwa_wynik}
+```{r cartogram_wojewodztwa_wynik, message=FALSE, warning=FALSE}
+
 tmap_arrange(cont_woj_duda, ncont_woj_duda, dorling_woj_duda, layout_woj_duda, cont_woj_frek, ncont_woj_frek, dorling_woj_frek, layout_woj_frek, nrow = 2)
 
 ```
 
-```{r cartogram_powiaty, results='hide'}
+```{r cartogram_powiaty, message=FALSE, warning=FALSE, results=FALSE}
 
 prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
 prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
@@ -276,9 +279,11 @@ layout_pow_duda = tm_shape(prez_pow_dorling_duda) + tm_polygons("t1.duda", style
 
 layout_pow_frek = tm_shape(prez_pow_dorling_frek) + tm_polygons("f1", style = "jenks", palette = get_brewer_pal("Greens")) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
 ```
 
-```{r cartogram_powiaty_wynik}
+```{r cartogram_powiaty_wynik, message=FALSE, warning=FALSE}
+
 tmap_arrange(cont_pow_duda, ncont_pow_duda, dorling_pow_duda, layout_pow_duda, cont_pow_frek, ncont_pow_frek, dorling_pow_frek, layout_pow_frek, nrow = 2)
 
 ```
