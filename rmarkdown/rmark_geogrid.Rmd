@@ -35,7 +35,7 @@ set.seed(32)
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = i)
+  new_cells = calculate_grid(shape = prez_woj, learning_rate = 0.3, grid_type = "hexagonal", seed = i)
   plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
@@ -63,8 +63,8 @@ resultreg_woj = assign_polygons(prez_woj, new_cells_reg_woj)
 
 ```{r geogrid_wojewodztwa_palety, message=FALSE, warning=FALSE}
 
-paleta_blue = get_brewer_pal("Blues")
-paleta_orange = get_brewer_pal("Oranges")
+paleta_blue = get_brewer_pal("Blues", plot = FALSE)
+paleta_orange = get_brewer_pal("Oranges", plot = FALSE)
 
 ```
 
@@ -73,11 +73,11 @@ paleta_orange = get_brewer_pal("Oranges")
 # rawplot -----------------------------------------------------------------
 
 rawplot_woj_duda = tm_shape(prez_woj) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 rawplot_woj_frek = tm_shape(prez_woj) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -87,11 +87,11 @@ rawplot_woj_frek = tm_shape(prez_woj) +
 # hexplot -----------------------------------------------------------------
 
 hexplot_woj_duda = tm_shape(resulthex_woj) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 hexplot_woj_frek = tm_shape(resulthex_woj) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -101,11 +101,11 @@ hexplot_woj_frek = tm_shape(resulthex_woj) +
 # regplot -----------------------------------------------------------------
 
 regplot_woj_duda = tm_shape(resultreg_woj) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 regplot_woj_frek = tm_shape(resultreg_woj) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -171,8 +171,8 @@ resultreg_pow = assign_polygons(prez_pow, new_cells_reg_pow)
 
 ```{r geogrid_powiaty_palety, message=FALSE, warning=FALSE}
 
-paleta_blue = get_brewer_pal("Blues")
-paleta_orange = get_brewer_pal("Oranges")
+paleta_blue = get_brewer_pal("Blues", plot = FALSE)
+paleta_orange = get_brewer_pal("Oranges", plot = FALSE)
 
 ```
 
@@ -181,11 +181,11 @@ paleta_orange = get_brewer_pal("Oranges")
 # rawplot -----------------------------------------------------------------
 
 rawplot_pow_duda = tm_shape(prez_pow) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 rawplot_pow_frek = tm_shape(prez_pow) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -194,12 +194,12 @@ rawplot_pow_frek = tm_shape(prez_pow) +
 
 # hexplot -----------------------------------------------------------------
 
-hexplot_pow_duda = tm_shape(resulthex_pow) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+hexplot_pow_duda = tm_shape(resulthex_pow) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 hexplot_pow_frek = tm_shape(resulthex_pow) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -209,11 +209,11 @@ hexplot_pow_frek = tm_shape(resulthex_pow) +
 # regplot -----------------------------------------------------------------
 
 regplot_pow_duda = tm_shape(resultreg_pow) + 
-  tm_fill("t1.duda", palette = paleta_blue, legend.show = FALSE) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 regplot_pow_frek = tm_shape(resultreg_pow) + 
-  tm_fill("f1", palette = paleta_orange, legend.show = FALSE) +
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = FALSE)
 
 ```
@@ -221,10 +221,10 @@ regplot_pow_frek = tm_shape(resultreg_pow) +
 ```{r geogrid_powiaty_layout, message=FALSE, warning=FALSE}
 # layout -----------------------------------------------------------------
 
-layout_pow_duda = tm_shape(resultreg_pow) + tm_fill("t1.duda", palette = paleta_blue) +
+layout_pow_duda = tm_shape(resultreg_pow) + tm_polygons("t1.duda", palette = paleta_blue) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-layout_pow_frek = tm_shape(resultreg_pow) + tm_fill("f1", palette = paleta_orange) +
+layout_pow_frek = tm_shape(resultreg_pow) + tm_polygons("f1", palette = paleta_orange) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```
