@@ -12,7 +12,7 @@ output: html_document
 library(cartogram)
 library(tmap)
 library(maptools)
-library(tidyverse)
+library(dplyr)
 library(sf)
 library(tmaptools)
 
@@ -27,7 +27,7 @@ prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
 
 ```
 
-```{r cartogram_wojewodztwa_obliczenia, cache = TRUE, warning = FALSE}
+```{r cartogram_wojewodztwa_obliczenia, cache = TRUE, message=FALSE, warning = FALSE}
 
 # Continuous Area Cartogram
 prez_woj_cont_duda = cartogram_cont(prez_woj, "t1.duda", 8)
@@ -45,8 +45,8 @@ prez_woj_dorling_frek = cartogram_dorling(prez_woj, "f1")
 
 ```{r cartogram_wojewodztwa_palety, message=FALSE, warning=FALSE}
 
-paleta_red = get_brewer_pal("Reds")
-paleta_green = get_brewer_pal("Greens")
+paleta_red = get_brewer_pal("Reds", plot = FALSE)
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
 
 ```
 
@@ -115,18 +115,17 @@ tmap_arrange(cont_woj_duda, ncont_woj_duda, dorling_woj_duda, layout_woj_duda, c
 ### Na przykładzie powiatów
 ```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
 
-prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_pow.gpkg"
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
 prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
 ```
 
-```{r cartogram_powiaty_obliczenia, cache = TRUE, warning = FALSE}
+```{r cartogram_powiaty_obliczenia, message=FALSE, cache = TRUE, warning = FALSE}
 
 # Continuous Area Cartogram
 prez_pow_cont_duda = cartogram_cont(prez_pow, "t1.duda", 8)
-prez_pow_cont_frek = cartogram_cont(prez_pow, "f1", 8)
-
+prez_pow_cont_frek = cartogram_cont(prez_pow, "f1", 50, threshold = 0.1)
 # Non-contiguous Area Cartogram
 prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1.duda")
 prez_pow_ncont_frek = cartogram_ncont(prez_pow, "f1")
@@ -139,8 +138,8 @@ prez_pow_dorling_frek = cartogram_dorling(prez_pow, "f1")
 
 ```{r cartogram_powiaty_palety, message=FALSE, warning=FALSE}
 
-paleta_red = get_brewer_pal("Reds")
-paleta_green = get_brewer_pal("Greens")
+paleta_red = get_brewer_pal("Reds", plot = FALSE)
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
 
 ```
 
