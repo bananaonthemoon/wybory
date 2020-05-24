@@ -28,7 +28,7 @@
 
 \\
 
-[Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://link.springer.com/chapter/10.1007/978-981-13-3441-2_28)
+[Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://sci-hub.tw/10.1007/978-981-13-3441-2)
 
 [Cartograms, hexograms and regular grids: Minimising misrepresentation in spatial data visualisations](https://sci-hub.tw/https://doi.org/10.1177/2399808319873923)
 
