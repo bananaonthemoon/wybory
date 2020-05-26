@@ -6,21 +6,16 @@ output: html_document
 ---
 
 1.	Wstęp
-
   +	Różne techniki wizualizacji
-  
   +	Po co to robimy? Dlatego, że są różne wizualizacje, wiele z wizualizacji jest niepoprawnie używanych albo nadużywanych, a być może nienajlepszych. Sprawdzam które z nich są najlepsze w przypadku danych wyborczych dla polski w ułożeniu wojewódzkim, powiatowym, and powiatowym w jednym województwie
 
 2.	Przygotowanie danych i wizualizacji
-  
   +	Skąd te dane
-  
   +	Pakiety (jakie?)
     +	Jak działają
     +	Co wizualizują
 
 3.	Wyniki
-
   +	Część statyczna
     +	Cartogram
     +	Geogrid
@@ -32,9 +27,7 @@ output: html_document
     + Opis wyników ankiety (która oceniana najlepiej)
 
 4.	Podsumowanie
-
 5.	Literatura
-  
   +	Techniki wizualizacji, które są używane
   +	Przykłady wizualizacji wyborczych, różnych map i typów wizualizacji.
 
