@@ -70,10 +70,9 @@ ncont_woj_duda = tm_shape(prez_woj) +
   tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
-ncont_woj_frek = tm_shape(prez_woj) + 
-  tm_borders() + 
-  tm_shape(prez_woj_ncont_frek) + 
+ncont_woj_frek = tm_shape(prez_woj_ncont_frek) + 
   tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_borders("white", alpha = 0.8) + 
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -171,7 +170,7 @@ ncont_pow_frek = tm_shape(prez_pow) +
 
 ```
 
-```{r cartogram_powiaty_nonoverlapping, message=FALSE, warning=FALSE}
+```{r cartogram_powiaty_nonoverlapping, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 dorling_pow_duda = tm_shape(prez_pow) + 
   tm_borders() + 
@@ -189,11 +188,11 @@ dorling_pow_frek = tm_shape(prez_pow) +
 
 ```{r cartogram_powiaty_layout, message=FALSE, warning=FALSE}
 
-layout_pow_duda = tm_shape(prez_pow_dorling_duda) + 
+layout_pow_duda = tm_shape(prez_pow_ncont_frek) + 
   tm_polygons("t1.duda", style = "jenks", palette = paleta_red) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
-layout_pow_frek = tm_shape(prez_pow_dorling_frek) + 
+layout_pow_frek = tm_shape(prez_pow_ncont_frek) + 
   tm_polygons("f1", style = "jenks", palette = paleta_green) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
@@ -201,6 +200,6 @@ layout_pow_frek = tm_shape(prez_pow_dorling_frek) +
 
 ```{r cartogram_powiaty_wynik, message=FALSE, warning=FALSE}
 
-tmap_arrange(cont_pow_duda, ncont_pow_duda, dorling_pow_duda, layout_pow_duda, cont_pow_frek, ncont_pow_frek, dorling_pow_frek, layout_pow_frek, nrow = 2)
+tmap_arrange(cont_pow_duda, ncont_pow_duda, layout_pow_duda, cont_pow_frek, ncont_pow_frek, layout_pow_frek, nrow = 2)
 
 ```

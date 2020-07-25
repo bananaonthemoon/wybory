@@ -32,6 +32,10 @@
 
 [Cartograms, hexograms and regular grids: Minimising misrepresentation in spatial data visualisations](https://sci-hub.tw/https://doi.org/10.1177/2399808319873923)
 
+[Election Data Visualisation](https://pearl.plymouth.ac.uk/bitstream/handle/10026.1/1589/2013long10137347phd.pdf?sequence=2&isAllowed=y)
+
+[Mapping election results in proportional electoral systems](https://sci-hub.tw/https://doi.org/10.1080/17445647.2016.1239558)
+
 \\
 
 [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/index.html)

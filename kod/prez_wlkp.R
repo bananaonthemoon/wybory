@@ -68,13 +68,22 @@ j_ewid = read_sf("dane/pobrane/Jednostki_ewidencyjne.shp", stringsAsFactors=FALS
   st_transform(crs = 2180) %>% 
   select(-c(4:29)) %>%
   filter(str_detect(JPT_KOD_JE, "^30"))
+st_make_valid(j_ewid)
 
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 j_ewid$geometry = j_ewid_simp$geometry
 write_sf(j_ewid, dsn = "dane/temp/j_ewid_wlkp.gpkg", driver = "GPKG")
 j_ewid = read_sf("dane/temp/j_ewid_wlkp.gpkg", stringsAsFactors=FALSE)
+# Jedna geometria jest niepoprawna (ring self-intersection)
+st_buffer(j_ewid, dist = 0)
 
+st_is_valid(j_ewid)
+st_make_valid(j_ewid)
+
+st_is_valid(st_make_valid(j_ewid))
+plot(j_ewid, col = 'grey', axes = TRUE, graticule = TRUE)
+st_is_valid(j_ewid, reason = TRUE)
 
 # Czyszczenie danych ------------------------------------------------------
 

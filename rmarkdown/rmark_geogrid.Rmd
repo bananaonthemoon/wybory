@@ -22,8 +22,8 @@ library(tmaptools)
 ### Na przykładzie województw
 ```{r geogrid_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
 
-prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
-prez_woj = read_sf(prez_w, stringsAsFactors=FALSE)
+prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_woj = read_sf(prez_woj, stringsAsFactors=FALSE)
 
 ```
 
@@ -52,8 +52,8 @@ set.seed(23)
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
-  plot(new_cells_woj, main = paste("Seed", i, sep = " "))
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
 new_cells_reg_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
@@ -160,8 +160,8 @@ set.seed(23)
 
 par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
 for (i in 1:6) {
-  new_cells_pow = calculate_grid(shape = prez_pow, grid_type = "regular", seed = i)
-  plot(new_cells_pow, main = paste("Seed", i, sep = " "))
+  new_cells = calculate_grid(shape = prez_pow, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
 }
 
 new_cells_reg_pow = calculate_grid(shape = prez_pow, grid_type = "regular", seed = 2)
@@ -232,5 +232,112 @@ layout_pow_frek = tm_shape(resultreg_pow) + tm_polygons("f1", palette = paleta_o
 ```{r geogrid_powiaty_wynik, message = FALSE, warning = FALSE}
 
 tmap_arrange(rawplot_pow_duda, hexplot_pow_duda, regplot_pow_duda, layout_pow_duda, rawplot_pow_frek, hexplot_pow_frek, regplot_pow_frek, layout_pow_frek, nrow = 2)
+
+```
+### Na przykładzie gmin w Wielkopolsce
+```{r geogrid_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_wlkp.gpkg"
+prez_wlkp = read_sf(prez_w, stringsAsFactors=FALSE)
+
+```
+
+```{r geogrid_wlkp_obliczenia_hexplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_wlkp, learning_rate = 0.4, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_wlkp = calculate_grid(shape = prez_wlkp, grid_type = "hexagonal", seed = 2)
+resulthex_wlkp = assign_polygons(prez_wlkp, new_cells_hex_wlkp)
+
+```
+
+```{r geogrid_wlkp_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_wlkp, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_wlkp = calculate_grid(shape = prez_wlkp, grid_type = "regular", seed = 2)
+resultreg_wlkp = assign_polygons(prez_wlkp, new_cells_reg_wlkp)
+
+```
+
+```{r geogrid_wlkp_palety, message=FALSE, warning=FALSE}
+
+paleta_blue = get_brewer_pal("Blues", plot = FALSE)
+paleta_orange = get_brewer_pal("Oranges", plot = FALSE)
+
+```
+
+```{r geogrid_wlkp_rawplot, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+rawplot_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+rawplot_wlkp_frek = tm_shape(prez_wlkp) + 
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wlkp_hexplot, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+hexplot_wlkp_duda = tm_shape(resulthex_wlkp) +
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+hexplot_wlkp_frek = tm_shape(resulthex_wlkp) + 
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wlkp_regplot, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+regplot_wlkp_duda = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t1.duda", palette = paleta_blue, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+regplot_wlkp_frek = tm_shape(resultreg_wlkp) + 
+  tm_polygons("f1", palette = paleta_orange, border.col = "White", border.alpha = 0.3, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = FALSE)
+
+```
+
+```{r geogrid_wlkp_layout, message=FALSE, warning=FALSE}
+# layout -----------------------------------------------------------------
+
+layout_wlkp_duda = tm_shape(resultreg_wlkp) + tm_polygons("t1.duda", palette = paleta_blue) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+layout_wlkp_frek = tm_shape(resultreg_wlkp) + tm_polygons("f1", palette = paleta_orange) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+```
+
+```{r geogrid_wlkp_wynik, message = FALSE, warning = FALSE}
+
+tmap_arrange(rawplot_wlkp_duda, hexplot_wlkp_duda, regplot_wlkp_duda, layout_wlkp_duda, rawplot_wlkp_frek, hexplot_wlkp_frek, regplot_wlkp_frek, layout_wlkp_frek, nrow = 2)
 
 ```
