@@ -1,47 +1,44 @@
 ## Kod na podstawie:
 ## https://github.com/Nowosad/spDataLarge/blob/master/data-raw/08_pol_pres15.R (autor: Roger Bivand)
 
-## Wybory prezydenckie z 2015 roku, pierwsza oraz druga tura (podział dla gmin w Wielkopolsce)
+## Wybory prezydenckie z 2015 roku, pierwsza oraz druga tura (podział dla gmin)
 
 
 # Pierwsza tura -----------------------------------------------------------
 
 
 library(tidyverse)
+library(stringr)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
-download.file("https://prezydent2015.pkw.gov.pl/prezydent_2015_tura1.zip", "dane/temp/prezydent_2015_tura1.zip")
-unzip("dane/temp/prezydent_2015_tura1.zip", files="prezydent_2015_tura1.csv", exdir = "dane/pobrane")
-tura1 = read.csv2("dane/pobrane/prezydent_2015_tura1.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+temp <- tempfile()
+download.file("https://wybory.gov.pl/prezydent20200628/data/1/csv/wyniki_gl_na_kand_po_gminach_proc_csv.zip", temp)
+unzip(temp, files="wyniki_gl_na_kand_po_gminach_proc_utf8.csv", exdir = "dane/pobrane/tura1")
+tura1 = read.csv2("dane/pobrane/tura1/wyniki_gl_na_kand_po_gminach_proc_utf8.csv", header=TRUE, encoding="UTF-8", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
-tura1[[3]] = formatC(tura1[[3]], width=6, format="d", flag="0")
-tura1 = tura1 %>%
-  filter(TERYT.gminy != "149901" & TERYT.gminy != "229901") %>%
-  group_by(TERYT.gminy) %>%
-  summarise_if(is.numeric, sum) %>%
-  select(-c(2, 4:20))
+tura1[[2]] = formatC(tura1[[2]], width=6, format="d", flag="0")
+tura1[[2]] = str_sub(tura1[[2]], 1, 6) 
+tura1 = select(tura1, -c(1, 5:6, 8:12, 24))
+names(tura1)[names(tura1) == 'Kod.TERYT'] <- 'TERYT'
+#tura1 = filter(tura1, str_detect(TERYT, "30$"))
+tura1 = filter(tura1, between(TERYT, 300000, 309999))
 
 
 # Druga tura -----------------------------------------------------------
 
 
 # Pobranie oraz wczytanie danych z drugiej tury
-download.file("https://prezydent2015.pkw.gov.pl/wyniki_tura2.zip", "dane/temp/wyniki_tura2.zip")
-unzip("dane/temp/wyniki_tura2.zip", files="wyniki_tura2.xls", exdir = "dane/pobrane")
-# readxl::read_excel() niepoprawna kolumna "TERYT gminy"
-# https://github.com/tidyverse/readxl/issues/565
-# przekonwertować do CSV z poziomu Excela, zostawić kodowanie CP1250
-tura2 = read.csv2("dane/pobrane/wyniki_tura2.csv", header=TRUE, fileEncoding="CP1250", stringsAsFactors=FALSE)
+download.file("https://wybory.gov.pl/prezydent20200628/data/2/csv/wyniki_gl_na_kand_po_gminach_proc_csv.zip", temp)
+unzip(temp, files="wyniki_gl_na_kand_po_gminach_proc_utf8.csv", exdir = "dane/pobrane/tura2")
+tura2 = read.csv2("dane/pobrane/tura2/wyniki_gl_na_kand_po_gminach_proc_utf8.csv", header=TRUE, encoding="UTF-8", stringsAsFactors=FALSE)
 
 # Czyszczenie oraz agregowanie danych
-tura2[[3]] = formatC(tura2[[3]], width=6, format="d", flag="0")
-tura2 = tura2 %>%
-  filter(TERYT.gminy != "149901" & TERYT.gminy != "229901") %>%
-  group_by(TERYT.gminy) %>%
-  summarise_if(is.numeric, sum) %>%
-  select(-c(2, 4:20))
+tura2[[2]] = formatC(tura2[[2]], width=6, format="d", flag="0")
+tura2 = select(tura2, -c(1, 5:6, 8:12, 15))
+names(tura2)[names(tura2) == 'Kod.TERYT'] <- 'TERYT'
+tura2 = filter(tura2, between(TERYT, 300000, 309999))
 
 
 # Obie tury ---------------------------------------------------------------
@@ -51,8 +48,10 @@ tura2 = tura2 %>%
 names(tura1) = paste("t1_", names(tura1), sep="")
 names(tura2) = paste("t2_", names(tura2), sep="")
 
-obie_tury = merge(tura1, tura2, by.x="t1_TERYT.gminy", by.y="t2_TERYT.gminy") %>% 
-  filter(str_detect(t1_TERYT.gminy, "^30"))
+obie_tury = merge(tura1, tura2, by.x="t1_TERYT", by.y="t2_TERYT")
+
+write_xlsx(obie_tury, path = "dane/wybory_gmin_proc.xlsx")
+
 
 
 # Jednostki ewidencyjne ---------------------------------------------------
@@ -62,90 +61,26 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Jednostki_ewidencyjne.zip", "dane/temp/Jednostki_ewidencyjne.zip")
-unzip("dane/temp/Jednostki_ewidencyjne.zip", exdir = "dane/pobrane")
-j_ewid = read_sf("dane/pobrane/Jednostki_ewidencyjne.shp", stringsAsFactors=FALSE) %>%
+download.file("https://www.gis-support.pl/downloads/Gminy.zip", "dane/temp/Gminy.zip")
+unzip("dane/temp/Gminy.zip", exdir = "dane/pobrane")
+wlkp = read_sf("dane/pobrane/Gminy.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
-  select(-c(4:29)) %>%
-  filter(str_detect(JPT_KOD_JE, "^30"))
-st_make_valid(j_ewid)
+  select(-c(1, 4:29))
 
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
-j_ewid_simp = ms_simplify(j_ewid, keep_shapes = TRUE, method = "vis", keep = 0.1) 
-j_ewid$geometry = j_ewid_simp$geometry
-write_sf(j_ewid, dsn = "dane/temp/j_ewid_wlkp.gpkg", driver = "GPKG")
-j_ewid = read_sf("dane/temp/j_ewid_wlkp.gpkg", stringsAsFactors=FALSE)
-# Jedna geometria jest niepoprawna (ring self-intersection)
-st_buffer(j_ewid, dist = 0)
-
-st_is_valid(j_ewid)
-st_make_valid(j_ewid)
-
-st_is_valid(st_make_valid(j_ewid))
-plot(j_ewid, col = 'grey', axes = TRUE, graticule = TRUE)
-st_is_valid(j_ewid, reason = TRUE)
-
-# Czyszczenie danych ------------------------------------------------------
-
-
-# Porządkowanie obszarów administracyjnych
-j_ewid$kod6 = str_sub(j_ewid$JPT_KOD_JE, 1, 6) 
-j_ewid_agg = aggregate(j_ewid, list(j_ewid$kod6), head, n=1)
-j_ewid_1 = j_ewid_agg[, c("kod6", "JPT_NAZWA_", attr(j_ewid_agg, "sf_column"))]
-
-# Ujednolicenie nazw miejscowości
-j_ewid_1$Nazwa = toupper(j_ewid_1$JPT_NAZWA_)
-j_ewid_1$Nazwa = sub("N/", "NAD ", sub("( |-)OB.{1,}", "", sub(" (G|M)$", "", sub("[(]W[)]|[(]M[)]", "", sub(" MIASTO$", "",  sub("^MIASTO ", "",  sub("-(G|GM)$", "", sub("-M$", "",  sub("M[.]", "", sub("-MIASTO", "",  sub("GM.{1,4}", "", sub("-GM.{1,}", "", sub("- .{1,}", "", j_ewid_1$Nazwa)))))))))))))
-j_ewid_1$Nazwa = str_trim(j_ewid_1$Nazwa, side = c("both", "left", "right"))
-
-
-# Rodzaje gmin ---------------------------------------------------------------
-
-
-# Agregowanie jednostek ewidencyjnych do poziomu gmin
-# Szczegółnie 4_5 i 5_4
-j_ewid_k8 = substring(j_ewid$JPT_KOD_JE, 8, 8)
-j_ewid_k8_agg = aggregate(j_ewid_k8, list(j_ewid$kod6), paste, collapse="_")
-j_ewid_k8_agg$x[which(j_ewid_k8_agg$x =="5_4")] = "3"
-j_ewid_k8_agg$x[which(j_ewid_k8_agg$x =="4_5")] = "3"
-names(j_ewid_k8_agg) = c("TERYT", "Rodzaj.gminy")
-
-# Przypisanie rodzaju gmin do jednostek
-Rodzaj.gminy = rep("Gmina wiejska", length(j_ewid_k8_agg$Rodzaj.gminy))
-Rodzaj.gminy[grep("1", j_ewid_k8_agg$Rodzaj.gminy)] = "Gmina miejska"
-Rodzaj.gminy[grep("3", j_ewid_k8_agg$Rodzaj.gminy)] = "Gmina miejsko-wiejska"
-Rodzaj.gminy[grep("8", j_ewid_k8_agg$Rodzaj.gminy)] = "Gmina miejska"
-Rodzaj.gminy[grep("9", j_ewid_k8_agg$Rodzaj.gminy)] = "Gmina miejska" #delegacje
-j_ewid_k8_agg$Rodzaj.gminy = factor(Rodzaj.gminy)
+wlkp_simp = ms_simplify(wlkp, keep_shapes = TRUE, method = "vis", keep = 0.1) 
+wlkp$geometry = wlkp_simp$geometry
+write_sf(wlkp, dsn = "dane/temp/wlkp.gpkg", driver = "GPKG")
+wlkp = read_sf("dane/temp/wlkp.gpkg", stringsAsFactors=FALSE)
+wlkp[[1]] = str_sub(wlkp[[1]], 1, 6)
+wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 
 
 # Łączenie danych ---------------------------------------------------------
 
 
 # Łączenie danych z geometrią
-j_ewid_1b = merge(j_ewid_1, j_ewid_k8_agg, by.x="kod6", by.y="TERYT")
-prez_wlkp = merge(j_ewid_1, obie_tury, by.x="kod6", by.y="t1_TERYT.gminy")
-prez_wlkp = select(prez_wlkp,-c(1:3))
+prez_wlkp = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
+prez_wlkp = select(prez_gminy,-c(2, 17:18))
 
-# Obliczenie frekfencji oraz wyników kandydatów
-prez_wlkp$"1_frekw" = with(prez_wlkp, t1_Liczba.głosów.ważnych / t1_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-prez_wlkp$"2_frekw" = with(prez_wlkp, t2_Liczba.głosów.ważnych / t2_Liczba.wyborców.uprawnionych.do.głosowania * 100)
-prez_wlkp$f1.duda = with(prez_wlkp, t1_Andrzej.Sebastian.Duda / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f2.duda = with(prez_wlkp, t2_Andrzej.Sebastian.Duda / t2_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.komo = with(prez_wlkp,  t1_Bronisław.Maria.Komorowski / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f2.komo = with(prez_wlkp,  t2_Bronisław.Maria.Komorowski / t2_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.braun = with(prez_wlkp,  t1_Grzegorz.Michał.Braun / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.jarubas = with(prez_wlkp,  t1_Adam.Sebastian.Jarubas / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.korwin = with(prez_wlkp,  t1_Janusz.Ryszard.Korwin.Mikke / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.kowalski = with(prez_wlkp,  t1_Marian.Janusz.Kowalski / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.kukiz = with(prez_wlkp,  t1_Paweł.Piotr.Kukiz / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.ogorek = with(prez_wlkp,  t1_Magdalena.Agnieszka.Ogórek / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.palikot = with(prez_wlkp,  t1_Janusz.Marian.Palikot / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.tanajo = with(prez_wlkp,  t1_Paweł.Jan.Tanajno / t1_Liczba.głosów.ważnych * 100)
-prez_wlkp$f1.wilk = with(prez_wlkp,  t1_Jacek.Wilk / t1_Liczba.głosów.ważnych * 100)
-
-write_sf(prez_wlkp, dsn = "dane/prez_wlkp.gpkg")
-
-prez_wlkp_demo = prez_gminy %>% select(-c(1:2,4:21))
-
-write_sf(prez_wlkp_demo, dsn = "dane/prez_wlkp_demo.gpkg")
+write_sf(prez_gminy, dsn = "dane/prez_wlkp.gpkg")

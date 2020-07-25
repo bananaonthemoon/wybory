@@ -8,6 +8,7 @@
 
 
 library(tidyverse)
+library(stringr)
 library(readxl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
@@ -21,6 +22,7 @@ tura1[[2]] = formatC(tura1[[2]], width=6, format="d", flag="0")
 tura1[[2]] = str_sub(tura1[[2]], 1, 6) 
 tura1 = select(tura1, -c(1, 5:6, 8:12, 24))
 names(tura1)[names(tura1) == 'Kod.TERYT'] <- 'TERYT'
+
 
 # Druga tura -----------------------------------------------------------
 
@@ -67,7 +69,7 @@ gmina_simp = ms_simplify(gmina, keep_shapes = TRUE, method = "vis", keep = 0.1)
 gmina$geometry = gmina_simp$geometry
 write_sf(gmina, dsn = "dane/temp/gmina.gpkg", driver = "GPKG")
 gmina = read_sf("dane/temp/gmina.gpkg", stringsAsFactors=FALSE)
-gmina[[1]] = str_sub(gmina[[1]], 1, 6) 
+gmina[[1]] = str_sub(gmina[[1]], 1, 6)
 
 
 # Łączenie danych ---------------------------------------------------------
