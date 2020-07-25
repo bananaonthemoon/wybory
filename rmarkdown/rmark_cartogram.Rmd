@@ -30,16 +30,16 @@ prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
 ```{r cartogram_wojewodztwa_obliczenia, cache = TRUE, message=FALSE, warning = FALSE}
 
 # Continuous Area Cartogram
-prez_woj_cont_duda = cartogram_cont(prez_woj, "t1.duda", 8)
-prez_woj_cont_frek = cartogram_cont(prez_woj, "f1", 50, threshold = 0.1)
+prez_woj_cont_duda = cartogram_cont(prez_woj, "t1_Andrzej.Sebastian.DUDA", 8)
+prez_woj_cont_frek = cartogram_cont(prez_woj, "t1_Frekwencja", 50, threshold = 0.1)
 
 # Non-contiguous Area Cartogram
-prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t1.duda")
-prez_woj_ncont_frek = cartogram_ncont(prez_woj, "f1")
+prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t1_Andrzej.Sebastian.DUDA")
+prez_woj_ncont_frek = cartogram_ncont(prez_woj, "t1_Frekwencja")
 
 # Non-overlapping Circles Cartogram
-prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t1.duda")
-prez_woj_dorling_frek = cartogram_dorling(prez_woj, "f1")
+prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t1_Andrzej.Sebastian.DUDA")
+prez_woj_dorling_frek = cartogram_dorling(prez_woj, "t1_Frekwencja")
 
 ```
 
@@ -53,11 +53,11 @@ paleta_green = get_brewer_pal("Greens", plot = FALSE)
 ```{r cartogram_wojewodztwa_continuous, message=FALSE, warning=FALSE}
 
 cont_woj_duda = tm_shape(prez_woj_cont_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 cont_woj_frek = tm_shape(prez_woj_cont_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -67,11 +67,11 @@ cont_woj_frek = tm_shape(prez_woj_cont_frek) +
 ncont_woj_duda = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_ncont_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ncont_woj_frek = tm_shape(prez_woj_ncont_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_borders("white", alpha = 0.8) + 
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
@@ -82,13 +82,13 @@ ncont_woj_frek = tm_shape(prez_woj_ncont_frek) +
 dorling_woj_duda = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_dorling_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 dorling_woj_frek = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_dorling_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -96,11 +96,11 @@ dorling_woj_frek = tm_shape(prez_woj) +
 ```{r cartogram_wojewodztwa_layout, message=FALSE, warning=FALSE}
 
 layout_woj_duda = tm_shape(prez_woj_dorling_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 layout_woj_frek = tm_shape(prez_woj_dorling_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```
@@ -123,15 +123,15 @@ prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
 ```{r cartogram_powiaty_obliczenia, message=FALSE, cache = TRUE, warning = FALSE}
 
 # Continuous Area Cartogram
-prez_pow_cont_duda = cartogram_cont(prez_pow, "t1.duda", 8)
-prez_pow_cont_frek = cartogram_cont(prez_pow, "f1", 50, threshold = 0.1)
+prez_pow_cont_duda = cartogram_cont(prez_pow, "t1_Andrzej.Sebastian.DUDA", 8)
+prez_pow_cont_frek = cartogram_cont(prez_pow, "t1_Frekwencja", 50, threshold = 0.1)
 # Non-contiguous Area Cartogram
-prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1.duda")
-prez_pow_ncont_frek = cartogram_ncont(prez_pow, "f1")
+prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1_Andrzej.Sebastian.DUDA")
+prez_pow_ncont_frek = cartogram_ncont(prez_pow, "t1_Frekwencja")
 
 # Non-overlapping Circles Cartogram
-prez_pow_dorling_duda = cartogram_dorling(prez_pow, "t1.duda")
-prez_pow_dorling_frek = cartogram_dorling(prez_pow, "f1")
+prez_pow_dorling_duda = cartogram_dorling(prez_pow, "t1_Andrzej.Sebastian.DUDA")
+prez_pow_dorling_frek = cartogram_dorling(prez_pow, "t1_Frekwencja")
 
 ```
 
@@ -145,11 +145,11 @@ paleta_green = get_brewer_pal("Greens", plot = FALSE)
 ```{r cartogram_powiaty_continuous, message=FALSE, warning=FALSE}
 
 cont_pow_duda = tm_shape(prez_pow_cont_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 cont_pow_frek = tm_shape(prez_pow_cont_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -159,13 +159,13 @@ cont_pow_frek = tm_shape(prez_pow_cont_frek) +
 ncont_pow_duda = tm_shape(prez_pow) + 
   tm_borders() + 
   tm_shape(prez_pow_ncont_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ncont_pow_frek = tm_shape(prez_pow) + 
   tm_borders() + 
   tm_shape(prez_pow_ncont_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -175,13 +175,13 @@ ncont_pow_frek = tm_shape(prez_pow) +
 dorling_pow_duda = tm_shape(prez_pow) + 
   tm_borders() + 
   tm_shape(prez_pow_dorling_duda) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 dorling_pow_frek = tm_shape(prez_pow) + 
   tm_borders() + 
   tm_shape(prez_pow_dorling_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -189,11 +189,11 @@ dorling_pow_frek = tm_shape(prez_pow) +
 ```{r cartogram_powiaty_layout, message=FALSE, warning=FALSE}
 
 layout_pow_duda = tm_shape(prez_pow_ncont_frek) + 
-  tm_polygons("t1.duda", style = "jenks", palette = paleta_red) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 layout_pow_frek = tm_shape(prez_pow_ncont_frek) + 
-  tm_polygons("f1", style = "jenks", palette = paleta_green) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```

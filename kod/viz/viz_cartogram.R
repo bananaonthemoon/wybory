@@ -1,5 +1,5 @@
 ---
-  title: "rmark_cartogram"
+title: "rmark_cartogram"
 author: "Maria_Król"
 date: "7 05 2020"
 output: html_document

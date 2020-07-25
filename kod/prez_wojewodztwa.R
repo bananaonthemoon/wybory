@@ -70,6 +70,7 @@ write_sf(woj_simp, dsn = "dane/pobrane/woj.gpkg", driver = "GPKG")
 woj = read_sf("dane/pobrane/woj.gpkg", stringsAsFactors=FALSE)
 woj = select(woj, -1)
 
+
 # Łączenie danych ---------------------------------------------------------
 
 
