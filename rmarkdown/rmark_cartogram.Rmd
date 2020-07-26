@@ -24,7 +24,6 @@ library(tmaptools)
 prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
-st_is_valid(prez_woj)
 
 ```
 
