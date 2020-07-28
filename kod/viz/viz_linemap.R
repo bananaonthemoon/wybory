@@ -5,15 +5,16 @@ library(linemap)
 prez = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
 prez_woj = read_sf(prez, stringsAsFactors=FALSE) 
 
-download.file("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_map_subunits.zip", "dane/temp/ne_10m_admin_0_map_subunits.zip")
-unzip("dane/temp/ne_10m_admin_0_map_subunits.zip", exdir = "dane/pobrane")
+#temp = tempfile()
+#download.file("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_map_subunits.zip", temp)
+#unzip(temp, exdir = "dane/pobrane")
 
-sasiad = c("Germany", "Czechia", "Austria", "Slovakia", "Ukraine", "Belarus", "Lithuania", "Kalinigrad", "Poland")
+#sasiad = c("Germany", "Czechia", "Austria", "Slovakia", "Ukraine", "Belarus", "Lithuania", "Kalinigrad", "Poland")
 
-border = read_sf("dane/pobrane/ne_10m_admin_0_map_subunits.shp") %>%
-  filter(SUBUNIT %in% sasiad) %>%
-  select(NAME, POSTAL) %>%
-  st_transform(crs = 2180)
+#border = read_sf("dane/pobrane/ne_10m_admin_0_map_subunits.shp") %>%
+#  filter(SUBUNIT %in% sasiad) %>%
+#  select(NAME, POSTAL) %>%
+#  st_transform(crs = 2180)
 
 
 # LINEMAP -----------------------------------------------------------------
@@ -22,11 +23,11 @@ border = read_sf("dane/pobrane/ne_10m_admin_0_map_subunits.shp") %>%
 
 
 #dopasowanie wartości
-grid = getgrid(x = prez_woj, cellsize = 8000, var = "f1.duda")
+grid = getgrid(x = prez_woj, cellsize = 10000, var = "t1_Andrzej.Sebastian.DUDA")
 tlo = par(mar=c(0,0,0,0), bg = "ivory2")
-plot(st_geometry(border), col="ivory1", border = NA,
+plot(st_geometry(prez_woj), col="ivory1", border = NA,
      xlim = c(min(grid$X), max(grid$X)), ylim= c(min(grid$Y), max(grid$Y)))
-linemap(x = grid, var = "f1.duda", k = 200, threshold = 0.00005,
+linemap(x = grid, var = "t1_Andrzej.Sebastian.DUDA", k = 200, threshold = 0.005,
         col = "ivory1", border = "ivory4", lwd = 0.6, add = TRUE)
 par(tlo)
 
