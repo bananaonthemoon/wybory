@@ -70,8 +70,8 @@ wlkp = read_sf("dane/pobrane/Gminy.shp", stringsAsFactors=FALSE) %>%
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 wlkp_simp = ms_simplify(wlkp, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 wlkp$geometry = wlkp_simp$geometry
-write_sf(wlkp, dsn = "dane/temp/wlkp.gpkg", driver = "GPKG")
-wlkp = read_sf("dane/temp/wlkp.gpkg", stringsAsFactors=FALSE)
+write_sf(wlkp, dsn = "dane/temp/wlkp.geojson", driver = "GeoJSON")
+wlkp = read_sf("dane/temp/wlkp.geojson", stringsAsFactors=FALSE)
 wlkp[[1]] = str_sub(wlkp[[1]], 1, 6)
 wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 
@@ -81,6 +81,6 @@ wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 
 # Łączenie danych z geometrią
 prez_wlkp = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
-prez_wlkp = select(prez_gminy,-c(2, 17:18))
+prez_wlkp = select(prez_wlkp,-c(3:4, 17:18))
 
-write_sf(prez_gminy, dsn = "dane/prez_wlkp.gpkg")
+write_sf(prez_wlkp, dsn = "dane/prez_wlkp.geojson")

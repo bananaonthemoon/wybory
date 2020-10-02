@@ -67,8 +67,8 @@ powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 powiat$geometry = powiat_simp$geometry
-write_sf(powiat, dsn = "dane/temp/powiat.gpkg", driver = "GPKG")
-powiat = read_sf("dane/temp/powiat.gpkg", stringsAsFactors=FALSE) 
+write_sf(powiat, dsn = "dane/temp/powiat.geojson", driver = "GeoJSON")
+powiat = read_sf("dane/temp/powiat.geojson", stringsAsFactors=FALSE) 
 powiat = select(powiat, -1)
 
 #isnt valid, próbowałam użyć st_make_valid ale nie działa
@@ -81,4 +81,4 @@ powiat = select(powiat, -1)
 prez_powiat = merge(powiat, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT") %>%
   select(-c(2, 16))
 
-write_sf(prez_powiat, dsn = "dane/prez_powiaty.gpkg")
+write_sf(prez_powiat, dsn = "dane/prez_powiaty.geojson")
