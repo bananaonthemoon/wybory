@@ -4,21 +4,68 @@ author: "Maria Król"
 date: "26 05 2020"
 output: html_document
 ---
+0. **ABSTRAKT**
 
-1.	Wstęp
-  +	Różne techniki wizualizacji
+Streszczenie powinno przedstawiać skrótowo główny problem pracy i jego rozwiązanie.
+Możliwa struktura streszczenia to: (1) 1-3 zdania wstępu do problemu (czym się zajmujemy, dlaczego jest to ważne, jakie są problemy/luki do wypełnienia), (2) 1 zdanie opisujące cel pracy, (3) 1-3 zdania przedstawiające użyte materiały (dane) i metody (techniki, narzędzia), (4) 1-3 zdania obrazujące główne wyniki pracy, (5) 1-2 zdania podsumowujące; możliwe jest też określenie dalszych kroków/planów.
+
+1. **WPROWADZENIE**
+
+Wprowadzenie powinno mieć charakter opisu od ogółu do szczegółu (np. 3-5 paragrafów).
+Pierwszy paragraf powinien być najbardziej ogólny, a kolejne powinny przybliżać czytelnika do problemu.
+Przedostatni paragraf powinien określić jaki jest problem (są problemy), który praca ma rozwiązać i dlaczego jest to (są one) ważne.
+
+Wprowadzenie powinno być zakończone stwierdzeniem celu pracy.
+Dodatkowo tutaj może być również krótki opis co zostało zrealizowane w pracy.
+
+  +	Różne techniki wizualizacji blah blah blah
   +	Po co to robimy? Dlatego, że są różne wizualizacje, wiele z wizualizacji jest niepoprawnie używanych albo nadużywanych, a być może nienajlepszych. Sprawdzam które z nich są najlepsze w przypadku danych wyborczych dla polski w ułożeniu wojewódzkim, powiatowym, and powiatowym w jednym województwie
 
-2.	Przygotowanie danych i wizualizacji
+2. **PRZEGLĄD LITERATURY**
+
+Ten rozdział zawiera wyjaśnienie kontekstu pracy.
+
+Pisząc ten rozdział proszę pomyśleć o osobach, które zupełnie nie znają opisywanej tematyki.
+Należy tutaj krok po kroku wyjaśnić podstawowe koncepcje, istotność problemu, wyniki poprzednich podobnych badań, itd.
+Ten rozdział obejmuje tylko kwestie, które już zostały wykonane przez inne osoby - nowe wyniki mają swoje miejsce w rozdziale \@ref(wyniki).
+
+Każda kwestia opisana w tym rozdziale powinna być cytowana.
+
+3. **MATERIAŁY**
+
+Celem tego rozdziału jest przedstawienie użytych w pracy danych. zarówno pisać o danych dot granic jak i wyborów.
+Należy wyjaśnić jakie dane zostały użyte, jakiego są one rodziaju, dla jakiego okresu zostały pobrane/stworzone, co one zawierają, etc.
+
+W tym rozdziale warto dodać ryciny i tabele przedstawiające użyte dane.
+
   +	Skąd te dane
+
+
+4. **METODY**
+
+Rozdział Metody zawiera opis użytych metod (np. statystycznych czy geostatystycznych) oraz technologii (np. pakiety R). 
+Opis każdej z metod czy technologi powinien być zwarty i zawierać tylko najważniejsze informacje z punktu widzenia pracy dyplomowej.
+
+Każda użyta metoda i technologia powinna być zacytowana.
+
   +	Pakiety (jakie?)
     +	Jak działają
     +	Co wizualizują
 
-3.	Wyniki
+5. **WYNIKI**
+
+Część wyniki może składać się z jedego lub więcej rozdziałów. 
+Każdy z tych rozdziałów powinien mieć tytuł adekwatny do swojej treści.
+
+Rozdziały wynikowe powinny korzystać z wiedzy opisanej w poprzednich rozdziałach (Rozdziały \@ref(lit), \@ref(materialy), \@ref(metody)).
+W przypadku prac analitycznych, ich treść powinna przedstawiać kolejne etapy eksploracji i analizy danych.
+W przypadku prac technicznych, treść tych rozdziałów powinnna opisywać stworzone narzędzia, a następnie pokazywać ich zastosowanie/a.
+
+W przypadku prac technicznych warto pokazywać fragmenty napisanego rozwiązania lub jego wywołania używając bloków kodu.
+
   +	Część statyczna
-    +	Cartogram
-    +	Geogrid
+    +	Cartogram --------
+    +	Geogrid ------
     +	Linemap/ggridges
   
   +	Część interaktywna
@@ -26,10 +73,22 @@ output: html_document
   +	Ankieta (ostatni artykuł)
     + Opis wyników ankiety (która oceniana najlepiej)
 
-4.	Podsumowanie
+6. **PODSUMOWANIE**
+
+Podsumowanie pracy jest w pewnym sensie znacznie rozbudowanym abstraktem. 
+Należy wyliczyć i opisać osiągnięcia uzyskane w pracy dyplomowej.
+Tutaj jednak (w przeciwieństwie do np. rozdziału \@ref(wprowadzenie)) należy przechodzić od szczegółu do ogółu - co zostało stworzone/określone, jak zostało to zrobione, jakie ma to konsekwencje, itd.
+
+Ten rozdział powinien też zawierać opis kwestii, których nie udało się rozwiązać w pracy dyplomowej (i dlaczego się nie udało) oraz pomysły na przyszłe ulepszenie uzyskanych wyników lub dalsze badania.
+
+
+
+
 5.	Literatura
   +	Techniki wizualizacji, które są używane
   +	Przykłady wizualizacji wyborczych, różnych map i typów wizualizacji.
+
+
 
 
 

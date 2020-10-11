@@ -5,7 +5,7 @@ library(sf)
 library(ggplot2)
 
 
-prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.geojson"
 prez_woj = read_sf(prez_w, stringsAsFactors=FALSE)
 xy = st_coordinates(prez_woj)
 
@@ -25,3 +25,11 @@ plot_gg(pp, width = 5, height = 4, scale = 300, multicore = TRUE, windowsize = c
 render_camera(fov = 70, zoom = 0.5, theta = 130, phi = 35)
 Sys.sleep(0.2)
 render_snapshot(clear = TRUE)
+
+
+
+pp = ggplot(data= prez_woj) +
+  geom_sf(aes(fill = t1_Frekwencja)) +
+  scale_fill_viridis_c(option = "C")
+plot(pp)
+dev.off()

@@ -65,7 +65,7 @@ powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
   select(-c(4:29))
 
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
-powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.1) 
+powiat_simp = ms_simplify(powiat, keep_shapes = TRUE, method = "vis", keep = 0.99) 
 powiat$geometry = powiat_simp$geometry
 write_sf(powiat, dsn = "dane/temp/powiat.geojson", driver = "GeoJSON")
 powiat = read_sf("dane/temp/powiat.geojson", stringsAsFactors=FALSE) 

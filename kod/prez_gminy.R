@@ -10,6 +10,7 @@
 library(tidyverse)
 library(stringr)
 library(readxl)
+library(writexl)
 
 # Pobranie oraz wczytanie danych z pierwszej tury
 temp <- tempfile()
@@ -77,6 +78,5 @@ gmina[[1]] = str_sub(gmina[[1]], 1, 6)
 
 # Łączenie danych z geometrią
 prez_gminy = merge(gmina, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
-prez_gminy = select(prez_gminy,-c(2, 17:18))
 
 write_sf(prez_gminy, dsn = "dane/prez_gminy.gpkg")

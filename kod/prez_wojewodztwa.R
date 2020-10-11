@@ -66,8 +66,8 @@ woj = read_sf("dane/pobrane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 woj_simp = ms_simplify(woj, keep_shapes = TRUE, method = "vis", keep = 0.1) 
 woj$geometry = woj_simp$geometry
-write_sf(woj_simp, dsn = "dane/pobrane/wojewodztwa.geojson", driver = "GeoJSON")
-woj = read_sf("dane/pobrane/wojewodztwa.geojson", stringsAsFactors=FALSE)
+write_sf(woj_simp, dsn = "dane/temp/wojewodztwa.geojson", driver = "GeoJSON")
+woj = read_sf("dane/temp/wojewodztwa.geojson", stringsAsFactors=FALSE)
 woj = select(woj, -1)
 
 
@@ -79,5 +79,4 @@ prez_woj = merge(woj, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
 
 prez_woj = select(prez_woj, -c(3,15))
 
-st_is_valid(woj)
 write_sf(prez_woj, dsn = "dane/prez_woj.geojson")
