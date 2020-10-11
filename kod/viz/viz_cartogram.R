@@ -1,12 +1,3 @@
----
-title: "rmark_cartogram"
-author: "Maria_Król"
-date: "7 05 2020"
-output: html_document
----
-  
-#Pakiet cartogram
-
 library(cartogram)
 library(tmap)
 library(maptools)
@@ -14,6 +5,7 @@ library(tidyverse)
 library(sf)
 library(tmaptools)
 
+#uzupelnic o wielkopolske
 # WOJEWODZTWA -------------------------------------------------------------
 
 # Dane
@@ -25,14 +17,17 @@ prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
 # Obliczenia
 
 # Continuous Area Cartogram
+
 prez_woj_cont_duda = cartogram_cont(prez_woj, "t1.duda", 8)
 prez_woj_cont_frek = cartogram_cont(prez_woj, "f1", 50, threshold = 0.1)
 
 # Non-contiguous Area Cartogram
+
 prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t1.duda")
 prez_woj_ncont_frek = cartogram_ncont(prez_woj, "f1")
 
 # Non-overlapping Circles Cartogram
+
 prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t1.duda")
 prez_woj_dorling_frek = cartogram_dorling(prez_woj, "f1")
 
