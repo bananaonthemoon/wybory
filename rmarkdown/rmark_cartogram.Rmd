@@ -124,7 +124,7 @@ prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
 
 # Continuous Area Cartogram
 prez_pow_cont_duda = cartogram_cont(prez_pow, "t1_Andrzej.Sebastian.DUDA", 8)
-prez_pow_cont_frek = cartogram_cont(prez_pow, "t1_Frekwencja", 50, threshold = 0.1)
+prez_pow_cont_frek = cartogram_cont(prez_pow, "t1_Frekwencja", 15, threshold = 0.1)
 # Non-contiguous Area Cartogram
 prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1_Andrzej.Sebastian.DUDA")
 prez_pow_ncont_frek = cartogram_ncont(prez_pow, "t1_Frekwencja")
@@ -217,7 +217,7 @@ prez_wlkp = read_sf(prez_p, stringsAsFactors=FALSE) %>%
 
 # Continuous Area Cartogram
 prez_wlkp_cont_duda = cartogram_cont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA", 8)
-prez_wlkp_cont_frek = cartogram_cont(prez_wlkp, "t1_Frekwencja", 50, threshold = 0.1)
+prez_wlkp_cont_frek = cartogram_cont(prez_wlkp, "t1_Frekwencja", 15, threshold = 0.1)
 # Non-contiguous Area Cartogram
 prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
 prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t1_Frekwencja")
