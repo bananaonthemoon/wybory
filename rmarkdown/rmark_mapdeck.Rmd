@@ -1,0 +1,53 @@
+---
+title: "rmark_mapdeck"
+author: "Maria_Król"
+date: "7 10 2020"
+output: html_document
+---
+
+# Pakiet `mapdeck`
+
+```{r biblioteki_mapdeck, message=FALSE, warning=FALSE}
+
+library(mapdeck)
+library(tidyverse)
+library(sf)
+library(st)
+library(tmaptools)
+library(colourvalues)
+
+```
+
+## add_hexagon()
+
+### Na przykładzie województw
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+key = 'pk.eyJ1IjoibWFya3JvOCIsImEiOiJja2QwODBzdGEwOGpwMnpvMThwdmFqZjNyIn0.BltIhc4-ZufZxHhOyUo30g'
+
+prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg" %>%
+  read_sf() %>%
+  st_transform(crs = 4326)
+
+```
+
+```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
+
+hex_woj = st_centroid(prez_woj)
+hex_woj$frek = prez_woj$t1_Frekwencja ^2 #nie ma sensu tutej używać
+
+mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
+  add_hexagon(
+    data = hex_woj,
+    radius = 25000,
+    elevation ="t1_Frekwencja",
+    elevation_scale = 100,
+    fill_colour = "t1_Frekwencja",
+    palette = "oranges",
+    colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
+    legend = TRUE #value to same 111111
+  )
+
+```
+
