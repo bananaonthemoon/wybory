@@ -13,6 +13,9 @@ output: html_document
 [x] problem z kolorem (colour zamiast fill_colour)
 [x] problem z values - jest samo 11111
 [] radius w powiacie
+[] wyzoomować lepiej na polskę?
+[] wartości frekfencji pow. 100?!
+[] dodać granice???
 
 ####### C A R T O G R A M ####### 
 
@@ -42,7 +45,7 @@ mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
     radius = 30000,
     elevation ="t1_Frekwencja",
     elevation_scale = 100,
-   # fill_colour = "t1_Frekwencja",
+   colour = "t1_Frekwencja",
    # palette = "oranges",
    # colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
     legend = TRUE #value to same 111111
