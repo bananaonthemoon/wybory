@@ -21,7 +21,7 @@ library(tmaptools)
 ### Na przykładzie województw
 ```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
 
-prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_woj.gpkg"
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
 prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
@@ -114,7 +114,7 @@ tmap_arrange(cont_woj_duda, ncont_woj_duda, dorling_woj_duda, layout_woj_duda, c
 ### Na przykładzie powiatów
 ```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
 
-prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/prez_powiaty.gpkg"
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
 prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180)
 
@@ -201,5 +201,98 @@ layout_pow_frek = tm_shape(prez_pow_ncont_frek) +
 ```{r cartogram_powiaty_wynik, message=FALSE, warning=FALSE}
 
 tmap_arrange(cont_pow_duda, ncont_pow_duda, layout_pow_duda, cont_pow_frek, ncont_pow_frek, layout_pow_frek, nrow = 2)
+
+```
+
+### Na przykładzie wielkopolski
+```{r cartogram_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_wlkp_obliczenia, message=FALSE, cache = TRUE, warning = FALSE}
+
+# Continuous Area Cartogram
+prez_wlkp_cont_duda = cartogram_cont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA", 8)
+prez_wlkp_cont_frek = cartogram_cont(prez_wlkp, "t1_Frekwencja", 50, threshold = 0.1)
+# Non-contiguous Area Cartogram
+prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
+prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t1_Frekwencja")
+
+# Non-overlapping Circles Cartogram
+prez_wlkp_dorling_duda = cartogram_dorling(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
+prez_wlkp_dorling_frek = cartogram_dorling(prez_wlkp, "t1_Frekwencja")
+
+```
+
+```{r cartogram_wlkp_palety, message=FALSE, warning=FALSE}
+
+paleta_red = get_brewer_pal("Reds", plot = FALSE)
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
+
+```
+
+```{r cartogram_wlkp_continuous, message=FALSE, warning=FALSE}
+
+cont_wlkp_duda = tm_shape(prez_wlkp_cont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+cont_wlkp_frek = tm_shape(prez_wlkp_cont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wlkp_noncontinuous, message=FALSE, warning=FALSE}
+
+ncont_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_borders() + 
+  tm_shape(prez_wlkp_ncont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+ncont_wlkp_frek = tm_shape(prez_wlkp) + 
+  tm_borders() + 
+  tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wlkp_nonoverlapping, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+dorling_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_borders() + 
+  tm_shape(prez_wlkp_dorling_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+dorling_wlkp_frek = tm_shape(prez_wlkp) + 
+  tm_borders() + 
+  tm_shape(prez_wlkp_dorling_frek) + 
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+```
+
+```{r cartogram_wlkp_layout, message=FALSE, warning=FALSE}
+
+layout_wlkp_duda = tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+layout_wlkp_frek = tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
+  tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
+
+```
+
+```{r cartogram_wlkp_wynik, message=FALSE, warning=FALSE}
+
+tmap_arrange(cont_wlkp_duda, ncont_wlkp_duda, layout_wlkp_duda, cont_wlkp_frek, ncont_wlkp_frek, layout_wlkp_frek, nrow = 2)
 
 ```

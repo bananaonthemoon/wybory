@@ -5,6 +5,14 @@ library(st)
 library(tmaptools)
 library(colourvalues)
 
+
+
+################## U W A G I ################
+
+# DOPASOWAĆ RADIUS I ELEVATION SCALE ETC DO KAŻDEGO
+
+
+
 #wizualizacja hex
 
 # add_hexagon() -------------------------------------------------------------
@@ -51,7 +59,7 @@ hex_woj$frek = prez_pow$t1_Frekwencja ^2 #nie ma sensu tutej używać
 mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
   add_hexagon(
     data = prez_pow,
-    radius = 25000,
+    radius = 25000, 
     elevation ="t1_Frekwencja",
     elevation_scale = 100,
     fill_colour = "t1_Frekwencja",

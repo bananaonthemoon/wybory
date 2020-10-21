@@ -1,3 +1,9 @@
+## READ
+
+
+
+## TO READ
+
 [Visualising elections with Python](https://towardsdatascience.com/visualising-elections-with-python-4973c0c60bbe)
 
 [Visualising election data: a guide to Mapbox expressions](https://blog.mapbox.com/visualizing-election-data-a-guide-to-mapbox-gl-expressions-92cc469b8dfd)
@@ -26,8 +32,6 @@
 
 [Maps of the 2016 US presidential election results](http://www-personal.umich.edu/~mejn/election/2016/)
 
-\\
-
 [Malaysia Election Data Visualization Using Hexagon Tile Grid Map + references](https://sci-hub.tw/10.1007/978-981-13-3441-2)
 
 [Cartograms, hexograms and regular grids: Minimising misrepresentation in spatial data visualisations](https://sci-hub.tw/https://doi.org/10.1177/2399808319873923)
@@ -35,8 +39,6 @@
 [Election Data Visualisation](https://pearl.plymouth.ac.uk/bitstream/handle/10026.1/1589/2013long10137347phd.pdf?sequence=2&isAllowed=y)
 
 [Mapping election results in proportional electoral systems](https://sci-hub.tw/https://doi.org/10.1080/17445647.2016.1239558)
-
-\\
 
 [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/index.html)
 
