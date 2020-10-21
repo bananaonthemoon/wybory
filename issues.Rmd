@@ -10,8 +10,9 @@ output: html_document
 
 ####### M A P D E C K ####### 
 
-[] problem z kolorem
-[] problem z values - jest samo 11111
+[x] problem z kolorem (colour zamiast fill_colour)
+[x] problem z values - jest samo 11111
+[] radius w powiacie
 
 ####### C A R T O G R A M ####### 
 

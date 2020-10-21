@@ -79,7 +79,7 @@ wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 
 
 # Łączenie danych z geometrią
-wielkopolska = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
-wielkopolska = select(prez_wlkp,-c(3:4, 17:18))
+wlkp_merge = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
+wielkopolska = select(wlkp_merge,-c(3:4, 17:18))
 
 write_sf(wielkopolska, dsn = "dane/wielkopolska.gpkg")

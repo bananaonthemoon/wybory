@@ -43,9 +43,9 @@ mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
     radius = 25000,
     elevation ="t1_Frekwencja",
     elevation_scale = 100,
-   # fill_colour = "t1_Frekwencja",
-   # palette = "oranges",
-   # colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
+    colour = "t1_Frekwencja",
+    #palette = "oranges",
+    #colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
     legend = TRUE #value to same 111111
   )
 
@@ -65,19 +65,18 @@ prez_pow = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gp
 
 ```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
 
-hex_pow = st_centroid(prez_woj)
-hex_pow$frek = prez_woj$t1_Frekwencja ^2 #nie ma sensu tutej używać
+hex_pow = st_centroid(prez_pow)
 
 mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
   add_hexagon(
     data = hex_pow,
-    radius = 25000,
+    radius = 800,
     elevation ="t1_Frekwencja",
-    elevation_scale = 100,
-    fill_colour = "t1_Frekwencja",
-    palette = "oranges",
-    colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
-    legend = TRUE #value to same 111111
+    elevation_scale = 50,
+    colour = "t1_Frekwencja",
+    #palette = "oranges",
+    #colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
+    legend = TRUE
   )
 
 ```
