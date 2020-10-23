@@ -7,15 +7,18 @@ output: html_document
 
 ################ I S S U E S  T O  S O L V E / F I X #############
 
+[] spytać się o obwód głowy juniora
+[] shrek czy baby yoda
 
 ####### M A P D E C K ####### 
 
 [x] problem z kolorem (colour zamiast fill_colour)
 [x] problem z values - jest samo 11111
 [] radius w powiacie
-[] wyzoomować lepiej na polskę?
+[x] wyzoomować lepiej na polskę?
 [] wartości frekfencji pow. 100?!
-[] dodać granice???
+[] dodać granice powiatów/gmin???
+[] jak usunąć fill z przykładu hex_ww
 
 ####### C A R T O G R A M ####### 
 
@@ -39,7 +42,10 @@ prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztw
 hex_woj = st_centroid(prez_woj)
 hex_woj$frek = prez_woj$t1_Frekwencja ^2 #nie ma sensu tutej używać
 
-mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
   add_hexagon(
     data = hex_woj,
     radius = 30000,
@@ -48,7 +54,8 @@ mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
    colour = "t1_Frekwencja",
    # palette = "oranges",
    # colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
-    legend = TRUE #value to same 111111
-  )
+    legend = TRUE, #value to same 111111
+  update_view = F
+   )
 
 ```
