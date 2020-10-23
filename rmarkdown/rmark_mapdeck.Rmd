@@ -20,6 +20,7 @@ library(colourvalues)
 
 ## add_hexagon()
 
+
 ### Na przykładzie województw
 
 ```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
@@ -37,7 +38,10 @@ prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztw
 hex_woj = st_centroid(prez_woj)
 hex_woj$frek = prez_woj$t1_Frekwencja ^2 #nie ma sensu tutej używać
 
-mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
   add_hexagon(
     data = hex_woj,
     radius = 25000,
@@ -46,13 +50,14 @@ mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
     colour = "t1_Frekwencja",
     #palette = "oranges",
     #colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
-    legend = TRUE #value to same 111111
+    legend = TRUE,
+    update_view = F
   )
 
 ```
 
+
 ### Na przykładzie powiatów
- -------------------------------------PROBLEM Z RADIUS
 
 ```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
 
@@ -68,7 +73,10 @@ prez_pow = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gp
 
 hex_pow = st_centroid(prez_pow)
 
-mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
   add_hexagon(
     data = hex_pow,
     radius = 800,
@@ -77,10 +85,12 @@ mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
     colour = "t1_Frekwencja",
     #palette = "oranges",
     #colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
-    legend = TRUE
+    legend = TRUE,
+    update_view = F
   )
 
 ```
+
 
 ### Na przykładzie wielkopolski
 
@@ -98,16 +108,134 @@ prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolsk
 
 hex_ww = st_centroid(prez_ww)
 
-mapdeck(token = key, style = mapdeck_style('light'),pitch = 45 ) %>%
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(16.735556, 52.292778), 
+        zoom = 6) %>%
   add_hexagon(
     data = hex_ww,
     radius = 900,
     elevation ="t1_Frekwencja",
     elevation_scale = 50,
     colour = "t1_Frekwencja",
-    #palette = "oranges",
-    #colour_range = colour_values(1:6, palette = "orrd"), #kolor nie działa?
-    legend = TRUE #value to same 111111
+    legend = TRUE,
+    update_view = F
+  ) %>%
+  add_polygon(
+    data = prez_ww,
+    stroke_colour = "#000000",
+    stroke_width = 500,
+    fill_colour = NULL,
+    elevation = NULL,
+    update_view = F
   )
+
+```
+
+
+
+
+
+## add_polygon()
+
+
+### Na przykładzie województw
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+key = 'pk.eyJ1IjoibWFya3JvOCIsImEiOiJja2QwODBzdGEwOGpwMnpvMThwdmFqZjNyIn0.BltIhc4-ZufZxHhOyUo30g'
+
+prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg" %>%
+  read_sf() %>%
+  st_transform(crs = 4326)
+
+```
+
+```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
+
+prez_woj$A = prez_woj$t1_Frekwencja ^2
+
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
+  add_polygon(
+    data = prez_woj,
+    elevation ="A",
+    elevation_scale = 10,
+    fill_colour = "t1_Frekwencja",
+    palette = "oranges",
+    legend = TRUE,
+    update_view = F
+  )
+
+
+```
+
+
+### Na przykładzie powiatów
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+key = 'pk.eyJ1IjoibWFya3JvOCIsImEiOiJja2QwODBzdGEwOGpwMnpvMThwdmFqZjNyIn0.BltIhc4-ZufZxHhOyUo30g'
+
+prez_pow = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg" %>%
+  read_sf() %>%
+  st_transform(crs = 4326)
+
+```
+
+```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
+
+prez_pow$A = prez_pow$t1_Frekwencja ^2
+
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
+  add_polygon(
+    data = prez_pow,
+    elevation ="A",
+    elevation_scale = 10,
+    fill_colour = "t1_Frekwencja",
+    palette = "oranges",
+    legend = TRUE,
+    update_view = F
+  )
+
+
+```
+
+
+### Na przykładzie województw
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+key = 'pk.eyJ1IjoibWFya3JvOCIsImEiOiJja2QwODBzdGEwOGpwMnpvMThwdmFqZjNyIn0.BltIhc4-ZufZxHhOyUo30g'
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg" %>%
+  read_sf() %>%
+  st_transform(crs = 4326)
+
+```
+
+```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
+
+prez_ww$A = prez_ww$t1_Frekwencja ^2
+
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(16.735556, 52.292778),  
+        zoom = 6) %>%
+  add_polygon(
+    data = prez_ww,
+    elevation ="A",
+    elevation_scale = 7,
+    fill_colour = "t1_Frekwencja",
+    palette = "oranges",
+    legend = TRUE,
+    update_view = F
+  )
+
 
 ```
