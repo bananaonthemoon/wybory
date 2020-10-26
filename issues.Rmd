@@ -22,7 +22,6 @@ output: html_document
 
 ####### C A R T O G R A M ####### 
 
-[] skalę kolorów odwrócić
 
 ```{r biblioteki_mapdeck, message=FALSE, warning=FALSE}
 

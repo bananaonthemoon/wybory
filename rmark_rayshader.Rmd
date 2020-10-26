@@ -1,0 +1,19 @@
+---
+title: "rmark_rayshader"
+author: "maria krol"
+date: "26 10 2020"
+output: html_document
+---
+
+# Pakiet `mapdeck`
+
+```{r biblioteki_rayshader, message=FALSE, warning=FALSE}
+
+library(rayshader)
+library(geogrid)
+library(dplyr)
+library(sf)
+library(ggplot2)
+
+```
+
