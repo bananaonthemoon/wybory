@@ -9,11 +9,35 @@ output: html_document
 
 ```{r biblioteki_rayshader, message=FALSE, warning=FALSE}
 
-library(rayshader)
-library(geogrid)
-library(dplyr)
 library(sf)
-library(ggplot2)
+library(rayshader)
+library(tidyverse)
+library(RColorBrewer)
 
+```
+
+```{r rayshade_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE)
+
+paleta_blue = display.brewer.pal(5, "Blues")
+
+```
+
+```{r rayshade_woj, message=FALSE, warning=FALSE}
+
+theme_set(theme_bw())
+
+gg_prez_woj = ggplot(prez_woj) +
+  geom_sf(aes(fill = t1_Frekwencja), color = "white", size = 0.4) +
+  scale_colour_brewer(palette = "Blues", direction = -1) +
+  ggtitle("Rayshader")
+
+plot(gg_prez_woj)
+
+#plot_gg(gg_prez_woj, shadow_intensity = 0.2, fov = 30)
+plot_gg(gg_prez_woj, width = 5, height = 4, scale = 300, raytrace = FALSE, preview = TRUE)
+render_depth(focallength=100,focus=0.72)
 ```
 
