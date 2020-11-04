@@ -60,8 +60,8 @@ library(sf)
 library(rmapshaper)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Gminy.zip", "dane/temp/Gminy.zip")
-unzip("dane/temp/Gminy.zip", exdir = "dane/pobrane")
+download.file("https://www.gis-support.pl/downloads/Gminy.zip", temp)
+unzip(temp, exdir = "dane/pobrane")
 wlkp = read_sf("dane/pobrane/Gminy.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(1, 4:29))
@@ -80,6 +80,6 @@ wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 
 # Łączenie danych z geometrią
 wlkp_merge = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
-wielkopolska = select(wlkp_merge,-c(3:4, 17:18))
+wielkopolska = select(wlkp_merge,-c(3:4, 14, 17:18))
 
 write_sf(wielkopolska, dsn = "dane/wielkopolska.gpkg")

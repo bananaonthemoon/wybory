@@ -71,7 +71,7 @@ prez_pow = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gp
 
 ```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
 
-hex_pow = st_centroid(prez_pow)
+hex_pow = st_point_on_surface(prez_pow)
 
 mapdeck(token = key, style = mapdeck_style('light'),
         pitch = 30, 
@@ -106,7 +106,7 @@ prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolsk
 
 ```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
 
-hex_ww = st_centroid(prez_ww)
+hex_ww = st_point_on_surface(prez_ww)
 
 mapdeck(token = key, style = mapdeck_style('light'),
         pitch = 30, 
@@ -123,8 +123,9 @@ mapdeck(token = key, style = mapdeck_style('light'),
   ) %>%
   add_polygon(
     data = prez_ww,
-    stroke_colour = "#000000",
+    stroke_colour = "#999999",
     stroke_width = 500,
+    fill_opacity = 0,
     fill_colour = NULL,
     elevation = NULL,
     update_view = F

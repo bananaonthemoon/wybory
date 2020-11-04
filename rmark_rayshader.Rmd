@@ -36,8 +36,7 @@ gg_prez_woj = ggplot(prez_woj) +
 
 plot(gg_prez_woj)
 
-#plot_gg(gg_prez_woj, shadow_intensity = 0.2, fov = 30)
-plot_gg(gg_prez_woj, width = 5, height = 4, scale = 300, raytrace = FALSE, preview = TRUE)
+plot_gg(gg_prez_woj, shadow_intensity = 0.2, fov = 30)
 render_depth(focallength=100,focus=0.72)
 ```
 

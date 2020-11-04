@@ -58,8 +58,8 @@ library(rmapshaper)
 library(geojsonio)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", "dane/temp/Wojewodztwa.zip")
-unzip("dane/temp/Wojewodztwa.zip", exdir = "dane/pobrane")
+download.file("https://www.gis-support.pl/downloads/Wojewodztwa.zip", temp)
+unzip(temp, exdir = "dane/pobrane")
 woj = read_sf("dane/pobrane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))
@@ -77,6 +77,6 @@ woj = select(woj, -1)
 # Łączenie danych z geometrią
 wojewodztwa = merge(woj, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
 
-wojewodztwa = select(wojewodztwa, -c(3,15))
+wojewodztwa = select(wojewodztwa, -c(3,15:16))
 
 write_sf(wojewodztwa, dsn = "dane/wojewodztwa.gpkg")

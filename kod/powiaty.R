@@ -58,8 +58,8 @@ library(rmapshaper)
 library(lwgeom)
 
 # Pobranie oraz wczytanie danych wektorowych, ustalenie układu współrzędnych
-download.file("https://www.gis-support.pl/downloads/Powiaty.zip", "dane/temp/Powiaty.zip")
-unzip("dane/temp/Powiaty.zip", exdir = "dane/pobrane")
+download.file("https://www.gis-support.pl/downloads/Powiaty.zip", temp)
+unzip(temp, exdir = "dane/pobrane")
 powiat = read_sf("dane/pobrane/Powiaty.shp", stringsAsFactors=FALSE) %>%
   st_transform(crs = 2180) %>% 
   select(-c(4:29))

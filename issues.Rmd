@@ -7,20 +7,17 @@ output: html_document
 
 ################ I S S U E S  T O  S O L V E / F I X #############
 
-[] spytać się o obwód głowy juniora
-[] shrek czy baby yoda
-
 ####### M A P D E C K ####### 
 
 [x] problem z kolorem (colour zamiast fill_colour)
 [x] problem z values - jest samo 11111
-[] radius w powiacie
+[----] radius w powiacie ODPUŚCIĆ
 [x] wyzoomować lepiej na polskę?
-[] wartości frekfencji pow. 100?!
-[] dodać granice powiatów/gmin???
-[] jak usunąć fill z przykładu hex_ww
+[---] wartości frekfencji pow. 100?! nie ma za bardzo rozwiazania
+[x] dodać granice powiatów/gmin???
 
-####### C A R T O G R A M ####### 
+
+####### R A Y S H A D E R ####### 
 
 
 ```{r biblioteki_mapdeck, message=FALSE, warning=FALSE}
