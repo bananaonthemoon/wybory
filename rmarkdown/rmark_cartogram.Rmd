@@ -53,11 +53,13 @@ paleta_green = get_brewer_pal("Greens", plot = FALSE)
 ```{r cartogram_wojewodztwa_continuous, message=FALSE, warning=FALSE}
 
 cont_woj_duda = tm_shape(prez_woj_cont_duda) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 cont_woj_frek = tm_shape(prez_woj_cont_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -67,12 +69,13 @@ cont_woj_frek = tm_shape(prez_woj_cont_frek) +
 ncont_woj_duda = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_ncont_duda) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ncont_woj_frek = tm_shape(prez_woj_ncont_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
-  tm_borders("white", alpha = 0.8) + 
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green,lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -82,13 +85,15 @@ ncont_woj_frek = tm_shape(prez_woj_ncont_frek) +
 dorling_woj_duda = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_dorling_duda) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.show = FALSE) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 dorling_woj_frek = tm_shape(prez_woj) + 
   tm_borders() + 
   tm_shape(prez_woj_dorling_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.show = FALSE) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, lwd = 0.01, legend.show = FALSE) +
+  tm_borders(lwd = 0.2) +
   tm_layout(frame = FALSE, legend.outside = TRUE)
 
 ```
@@ -96,11 +101,11 @@ dorling_woj_frek = tm_shape(prez_woj) +
 ```{r cartogram_wojewodztwa_layout, message=FALSE, warning=FALSE}
 
 layout_woj_duda = tm_shape(prez_woj_dorling_duda) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", title = "A. Duda [% głosów]", style = "jenks", palette = paleta_red, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 layout_woj_frek = tm_shape(prez_woj_dorling_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
+  tm_polygons("t1_Frekwencja", title = "Frekwencja", style = "jenks", palette = paleta_green, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```
@@ -189,11 +194,11 @@ dorling_pow_frek = tm_shape(prez_pow) +
 ```{r cartogram_powiaty_layout, message=FALSE, warning=FALSE}
 
 layout_pow_duda = tm_shape(prez_pow_ncont_frek) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 layout_pow_frek = tm_shape(prez_pow_ncont_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```
@@ -282,11 +287,11 @@ dorling_wlkp_frek = tm_shape(prez_wlkp) +
 ```{r cartogram_wlkp_layout, message=FALSE, warning=FALSE}
 
 layout_wlkp_duda = tm_shape(prez_wlkp_ncont_frek) + 
-  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "jenks", palette = paleta_red, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 layout_wlkp_frek = tm_shape(prez_wlkp_ncont_frek) + 
-  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green) +
+  tm_polygons("t1_Frekwencja", style = "jenks", palette = paleta_green, legend.reverse = TRUE) +
   tm_layout(frame = FALSE, legend.only = TRUE, legend.position = c("center", "center"))
 
 ```
