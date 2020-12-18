@@ -1,0 +1,565 @@
+---
+title: "pojedyncze_carto"
+author: "maria krol"
+date: "13 11 2020"
+output: html_document
+---
+
+## Pakiet `cartogram`
+
+```{r cartogram_biblioteki, message=FALSE, warning=FALSE}
+
+library(cartogram)
+library(tmap)
+library(maptools)
+library(dplyr)
+library(sf)
+library(tmaptools)
+
+```
+
+# FREKWENCJA_T1
+
+## Na przykładzie województw
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
+
+```
+
+```{r cartogram_wojewodztwa_continuous, message=FALSE, warning=FALSE}
+prez_woj_cont_frek = cartogram_cont(prez_woj, "t1_Frekwencja", 50, threshold = 0.1)
+
+cont_woj_frek = tm_shape(prez_woj_cont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 80), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_woj_frek)
+
+tmap_save(cont_woj_frek, filename = "cont_woj_frek.png")
+
+```
+
+```{r cartogram_wojewodztwa_noncontinuous, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_frek = cartogram_ncont(prez_woj, "t1_Frekwencja")
+
+ncont_woj_frek = tm_shape(prez_woj_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 80), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_woj_frek)
+
+#tmap_save(ncont_woj_frek, filename = "ncont_woj_frek.png")
+
+```
+
+```{r cartogram_wojewodztwa_dorling, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_frek = cartogram_dorling(prez_woj, "t1_Frekwencja")
+
+dorling_woj_frek = tm_shape(prez_woj) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_woj_dorling_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 80), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_woj_frek)
+
+#tmap_save(dorling_woj_frek, filename = "dorling_woj_frek.png")
+
+```
+
+## Na podstawie powiatów
+```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
+
+```
+
+```{r cartogram_powiaty_continuous, message=FALSE, warning=FALSE, cache = TRUE}
+prez_pow_cont_frek = cartogram_cont(prez_pow, "t1_Frekwencja", 15, threshold = 0.1)
+
+cont_pow_frek = tm_shape(prez_pow_cont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 64, 67, 80), labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_pow_frek)
+
+tmap_save(cont_pow_frek, filename = "cont_pow_frek.png")
+
+```
+
+```{r cartogram_powiaty_noncontinuous, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_frek = cartogram_ncont(prez_pow, "t1_Frekwencja")
+
+ncont_pow_frek = tm_shape(prez_pow) +
+  tm_borders(lwd = 0.5) +  
+  tm_shape(prez_pow_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 64, 67, 80), labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_frek)
+
+tmap_save(ncont_pow_frek, filename = "ncont_pow_frek.png")
+
+```
+
+```{r cartogram_powiaty_dorling, message=FALSE, warning=FALSE, cache = TRUE}
+
+#DORKLING DOESNT WORK FOR POWIATY
+
+prez_pow_dorling_frek = cartogram_dorling(prez_pow, "t1_Frekwencja")
+
+dorling_pow_frek = tm_shape(prez_pow) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_pow_dorling_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 64, 67, 80), labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_pow_frek)
+
+#tmap_save(dorling_pow_frek, filename = "dorling_pow_frek.png")
+
+```
+
+
+
+
+## Na przykładzie wielkopolski
+```{r cartogram_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
+
+```
+
+```{r cartogram_wlkp_continuous, message=FALSE, warning=FALSE}
+
+prez_wlkp_cont_frek = cartogram_cont(prez_wlkp, "t1_Frekwencja", 16, threshold = 0.1)
+
+cont_wlkp_frek = tm_shape(prez_wlkp_cont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 58, 61, 64, 67, 80), labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_wlkp_frek)
+
+tmap_save(cont_wlkp_frek, filename = "cont_wlkp_frek.png")
+
+```
+
+```{r cartogram_wlkp_noncontinuous, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t1_Frekwencja")
+
+ncont_wlkp_frek = tm_shape(prez_wlkp) +
+  tm_borders(lwd = 0.5) +
+  tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 58, 61, 64, 67, 80), labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_frek)
+
+tmap_save(ncont_wlkp_frek, filename = "ncont_wlkp_frek.png")
+
+```
+
+```{r cartogram_wlkp_dorling, message=FALSE, warning=FALSE, cache = TRUE}
+
+#NIE DZIAŁA DLA WIELKOPOLSKI
+
+prez_wlkp_dorling_frek = cartogram_dorling(prez_wlkp, "t1_Frekwencja")
+
+dorling_wlkp_frek = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_wlkp_dorling_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 64, 67, 80), labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_wlkp_frek)
+
+#tmap_save(dorling_wlkp_frek, filename = "dorling_wlkp_frek.png")
+
+```
+
+
+# DUDA_T1
+
+## Na przykładzie województw
+```{r cartogram_wojewodztwa_dane2, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+paleta_red = get_brewer_pal("Reds", plot = FALSE)
+
+```
+
+```{r cartogram_wojewodztwa_continuous1, message=FALSE, warning=FALSE}
+prez_woj_cont_frek = cartogram_cont(prez_woj, "t1_Frekwencja", 8, threshold = 0.1)
+
+cont_woj_frek = tm_shape(prez_woj_cont_duda) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40.3, 47, 53, 61), labels = c(" < 36", " 36 - 40,3", " 40,3 - 47", " 47 - 53", " > 53")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_woj_frek)
+
+tmap_save(cont_woj_frek, filename = "cont_woj_frek.png")
+
+```
+
+```{r cartogram_wojewodztwa_noncontinuous2, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t1_Andrzej.Sebastian.DUDA")
+
+ncont_woj_duda = tm_shape(prez_woj_ncont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40.3, 47, 53, 61), labels = c(" < 36", " 36 - 40,3", " 40,3 - 47", " 47 - 53", " > 53")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_woj_duda)
+
+tmap_save(ncont_woj_duda, filename = "ncont_woj_duda.png")
+
+```
+
+```{r cartogram_wojewodztwa_dorling2, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t1_Andrzej.Sebastian.DUDA")
+
+dorling_woj_duda = tm_shape(prez_woj) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_woj_dorling_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40.3, 47, 53, 61), labels = c(" < 36", " 36 - 40,3", " 40,3 - 47", " 47 - 53", " > 53")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_woj_duda)
+
+tmap_save(dorling_woj_duda, filename = "dorling_woj_duda.png")
+
+```
+
+
+
+## Na podstawie powiatów
+```{r cartogram_powiaty_dane2, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_powiaty_continuous2, message=FALSE, warning=FALSE, cache = TRUE}
+prez_pow_cont_duda = cartogram_cont(prez_pow, "t1_Andrzej.Sebastian.DUDA", 8, threshold = 0.1)
+
+cont_pow_duda = tm_shape(prez_pow_cont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 38, 43.5, 51, 61, 76), labels = c(" < 38", " 37 - 43,5", " 43,5 - 51", " 51 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_pow_duda)
+
+tmap_save(cont_pow_duda, filename = "cont_pow_duda.png")
+
+```
+
+```{r cartogram_powiaty_noncontinuous2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1_Andrzej.Sebastian.DUDA")
+
+ncont_pow_duda = tm_shape(prez_pow) +
+  tm_borders(lwd = 0.5) +  
+  tm_shape(prez_pow_ncont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 38, 43.5, 51, 61, 76), labels = c(" < 38", " 37 - 43,5", " 43,5 - 51", " 51 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_duda)
+
+tmap_save(ncont_pow_duda, filename = "ncont_pow_duda.png")
+
+```
+
+```{r cartogram_powiaty_dorling2, message=FALSE, warning=FALSE, cache = TRUE}
+
+#DORKLING DOESNT WORK FOR POWIATY
+
+prez_pow_dorling_duda = cartogram_dorling(prez_pow, "t1_Andrzej.Sebastian.DUDA")
+
+dorling_pow_duda = tm_shape(prez_pow) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_pow_dorling_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 38, 43.5, 51, 61, 76), labels = c(" < 38", " 37 - 43,5", " 43,5 - 51", " 51 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_pow_duda)
+
+#tmap_save(dorling_pow_duda, filename = "dorling_pow_duda.png")
+
+```
+
+## Na przykładzie wielkopolski
+```{r cartogram_wlkp_dane2, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_wlkp_continuous2, message=FALSE, warning=FALSE}
+
+prez_wlkp_cont_duda = cartogram_cont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA", 16, threshold = 0.1)
+
+cont_wlkp_duda = tm_shape(prez_wlkp_cont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 35, 43, 50, 57.5, 80), labels = c(" < 35", " 35 - 43", " 43 - 50", " 50 - 57,5", " > 57,5")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_wlkp_duda)
+
+tmap_save(cont_wlkp_duda, filename = "cont_wlkp_duda.png")
+
+```
+
+```{r cartogram_wlkp_noncontinuous2, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
+
+ncont_wlkp_duda = tm_shape(prez_wlkp) +
+  tm_borders(lwd = 0.5) +
+  tm_shape(prez_wlkp_ncont_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+               breaks = c(0, 35, 43, 50, 57.5, 80), labels = c(" < 35", " 35 - 43", " 43 - 50", " 50 - 57,5", " > 57,5")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_duda)
+
+tmap_save(cont_wlkp_duda, filename = "ncont_wlkp_duda.png")
+
+```
+
+```{r cartogram_wlkp_dorling2, message=FALSE, warning=FALSE, cache = TRUE}
+
+#NIE DZIAŁA DLA WIELKOPOLSKI
+
+prez_wlkp_dorling_duda = cartogram_dorling(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
+
+dorling_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_wlkp_dorling_duda) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 57, 60, 64, 67, 80), labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_wlkp_duda)
+
+#tmap_save(dorling_wlkp_duda, filename = "dorling_wlkp_duda.png")
+
+```
+
+
+
+# TRZASKOWSKI_T1
+
+## Na przykładzie województw
+```{r cartogram_wojewodztwa_dane3, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+paleta_blues = get_brewer_pal("Blues", plot = FALSE)
+
+```
+
+```{r cartogram_wojewodztwa_continuous3, message=FALSE, warning=FALSE}
+prez_woj_cont_trzaskowski = cartogram_cont(prez_woj, "t1_Rafał.Kazimierz.TRZASKOWSKI", 8, threshold = 0.1)
+
+cont_woj_trzaskowski = tm_shape(prez_woj_cont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 39), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_woj_trzaskowski)
+
+tmap_save(cont_woj_trzaskowski, filename = "cont_woj_trzaskowski.png")
+
+```
+
+```{r cartogram_wojewodztwa_noncontinuous3, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_trzaskowski = cartogram_ncont(prez_woj, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_woj_trzaskowski = tm_shape(prez_woj_ncont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 39), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_woj_trzaskowski)
+
+tmap_save(ncont_woj_trzaskowski, filename = "ncont_woj_trzaskowski.png")
+
+```
+
+```{r cartogram_wojewodztwa_dorling3, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_trzaskowski = cartogram_dorling(prez_woj, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+dorling_woj_trzaskowski = tm_shape(prez_woj) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_woj_dorling_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 39), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_woj_trzaskowski)
+
+tmap_save(dorling_woj_trzaskowski, filename = "dorling_woj_trzaskowski.png")
+
+```
+
+## Na podstawie powiatów
+```{r cartogram_powiaty_dane3, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_powiaty_continuous3, message=FALSE, warning=FALSE, cache = TRUE}
+prez_pow_cont_trzaskowski = cartogram_cont(prez_pow, "t1_Rafał.Kazimierz.TRZASKOWSKI", 8, threshold = 0.1)
+
+cont_pow_trzaskowski = tm_shape(prez_pow_cont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_pow_trzaskowski)
+
+tmap_save(cont_pow_trzaskowski, filename = "cont_pow_trzaskowski.png")
+
+```
+
+```{r cartogram_powiaty_noncontinuous3, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_trzaskowski = cartogram_ncont(prez_pow, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_pow_trzaskowski = tm_shape(prez_pow) +
+  tm_borders(lwd = 0.5) +  
+  tm_shape(prez_pow_ncont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_trzaskowski)
+
+tmap_save(ncont_pow_trzaskowski, filename = "ncont_pow_trzaskowski.png")
+
+```
+
+```{r cartogram_powiaty_dorling3, message=FALSE, warning=FALSE, cache = TRUE}
+
+#DORKLING DOESNT WORK FOR POWIATY
+
+prez_pow_dorling_trzaskowski = cartogram_dorling(prez_pow, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+dorling_pow_trzaskowski = tm_shape(prez_pow) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_pow_dorling_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 38, 43.5, 51, 61, 76), labels = c(" < 38", " 37 - 43,5", " 43,5 - 51", " 51 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_pow_trzaskowski)
+
+#tmap_save(dorling_pow_trzaskowski, filename = "dorling_pow_trzaskowski.png")
+
+```
+
+## Na przykładzie wielkopolski
+```{r cartogram_wlkp_dane3, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r cartogram_wlkp_continuous3, message=FALSE, cache = TRUE, warning=FALSE}
+
+prez_wlkp_cont_trzaskowski = cartogram_cont(prez_wlkp, "t1_Rafał.Kazimierz.TRZASKOWSKI", 16, threshold = 0.1)
+
+cont_wlkp_trzaskowski = tm_shape(prez_wlkp_cont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 17, 21, 28, 34.5, 51), labels = c(" < 17", " 17 - 21", " 21 - 28", " 28 - 34,5", " > 34,5")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(cont_wlkp_trzaskowski)
+
+tmap_save(cont_wlkp_trzaskowski, filename = "cont_wlkp_trzaskowski.png")
+
+```
+
+```{r cartogram_wlkp_noncontinuous3, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_trzaskowski = cartogram_ncont(prez_wlkp, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_wlkp_trzaskowski = tm_shape(prez_wlkp) +
+  tm_borders(lwd = 0.5) +
+  tm_shape(prez_wlkp_ncont_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+               breaks = c(0, 17, 21, 28, 34.5, 51), labels = c(" < 17", " 17 - 21", " 21 - 28", " 28 - 34,5", " > 34,5")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_trzaskowski)
+
+tmap_save(cont_wlkp_trzaskowski, filename = "ncont_wlkp_trzaskowski.png")
+
+```
+
+```{r cartogram_wlkp_dorling3, message=FALSE, warning=FALSE, cache = TRUE}
+
+#NIE DZIAŁA DLA WIELKOPOLSKI
+
+prez_wlkp_dorling_trzaskowski = cartogram_dorling(prez_wlkp, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+dorling_wlkp_trzaskowski = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 0.5) + 
+  tm_shape(prez_wlkp_dorling_trzaskowski) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blues, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 17, 21, 28, 34.5, 51), labels = c(" < 17", " 17 - 21", " 21 - 28", " 28 - 34,5", " > 34,5")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_wlkp_trzaskowski)
+
+#tmap_save(dorling_wlkp_trzaskowski, filename = "dorling_wlkp_trzaskowski.png")
+
+```

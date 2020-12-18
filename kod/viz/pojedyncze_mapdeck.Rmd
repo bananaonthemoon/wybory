@@ -1,0 +1,58 @@
+---
+title: "pojedyncze_mapdeck"
+author: "maria krol"
+date: "14 11 2020"
+output: html_document
+---
+
+# Pakiet `mapdeck`
+
+```{r biblioteki_mapdeck, message=FALSE, warning=FALSE}
+
+library(mapdeck)
+library(tidyverse)
+library(sf)
+library(st)
+library(tmaptools)
+library(colourvalues)
+
+```
+## add_hexagon()
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+key = 'pk.eyJ1IjoibWFya3JvOCIsImEiOiJja2QwODBzdGEwOGpwMnpvMThwdmFqZjNyIn0.BltIhc4-ZufZxHhOyUo30g'
+
+prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg" %>%
+  read_sf() %>%
+  st_transform(crs = 4326)
+
+```
+
+```{r mapdeck_woj_hex, message=FALSE, warning=FALSE}
+
+greens <- case_when(
+  prez_woj$t1_Frekwencja <= 61 ~ "#e8f6e4",
+  (prez_woj$t1_Frekwencja > 61 & prez_woj$t1_Frekwencja <= 62) ~ "#bde5b7",
+  (prez_woj$t1_Frekwencja > 62 & prez_woj$t1_Frekwencja <= 64) ~ "#85cc84",
+  (prez_woj$t1_Frekwencja > 64 & prez_woj$t1_Frekwencja <= 66) ~ "#43ab5d",
+  TRUE ~ "#147e3a"
+)
+
+hex_woj = st_centroid(prez_woj)
+
+mapdeck(token = key, style = mapdeck_style('light'),
+        pitch = 30, 
+        location = c(19.1344, 51.9189), 
+        zoom = 5) %>%
+  add_hexagon(
+    data = hex_woj,
+    radius = 25000,
+    elevation ="t1_Frekwencja",
+    elevation_scale = 100,
+    colour_range = greens,
+    legend = TRUE,
+    update_view = F
+  )
+
+```

@@ -1,0 +1,307 @@
+---
+title: "carto_dorling"
+author: "maria krol"
+date: "13 11 2020"
+output: html_document
+---
+  
+## Pakiet `cartogram`
+
+```{r cartogram_biblioteki, message=FALSE, warning=FALSE}
+
+library(cartogram)
+library(tmap)
+library(maptools)
+library(dplyr)
+library(sf)
+library(tmaptools)
+
+```  
+
+# wojewodztwa
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_cast("POLYGON")
+
+```
+
+## frekwencja
+
+```{r cartogram_wojewodztwa_dorling_frek, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_frek = cartogram_dorling(prez_woj, "t2_Frekwencja", m_weight = 0.1, k = 1, itermax = 1000)
+
+dorling_woj_frek = tm_shape(prez_woj) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_woj_dorling_frek) + 
+  tm_polygons("t2_Frekwencja", style = "fixed", palette = paleta_green, lwd = 1, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 80), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(dorling_woj_frek)
+
+tmap_save(dorling_woj_frek, filename = "woj_dorling_frek.png")
+
+```
+
+## frekwencja nocol
+
+```{r cartogram_wojewodztwa_dorling_frek_nocol, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_frek = cartogram_dorling(prez_woj, "t2_Frekwencja", m_weight = 0.1, k = 1, itermax = 1000)
+
+dorling_woj_frek = tm_shape(prez_woj) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_woj_dorling_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_woj_frek)
+
+tmap_save(dorling_woj_frek, filename = "woj_dorling_frek_nocol.png")
+
+```
+
+## duda
+
+```{r cartogram_wojewodztwa_dorling_duda, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_duda = cartogram_dorling(prez_woj, "t2_Andrzej.Sebastian.DUDA", m_weight = 0.1, k = 1, itermax = 1000)
+
+dorling_woj_duda = tm_shape(prez_woj) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_woj_dorling_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_woj_duda)
+
+tmap_save(dorling_woj_duda, filename = "woj_dorling_duda_nocol.png")
+
+```
+
+## trzaskowski
+
+```{r cartogram_wojewodztwa_dorling_trzaskowski, message=FALSE, warning=FALSE}
+
+prez_woj_dorling_trzaskowski = cartogram_dorling(prez_woj, "t2_trzaskowski", m_weight = 0.1, k = 1, itermax = 1000)
+
+dorling_woj_trzaskowski = tm_shape(prez_woj) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_woj_dorling_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_woj_trzaskowski)
+
+tmap_save(dorling_woj_trzaskowski, filename = "woj_dorling_trzaskowski_nocol.png")
+
+```
+
+
+# powiaty
+
+```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_cast("POLYGON")
+
+```
+
+## frekwencja tura2
+
+```{r cartogram_powiaty_dorling_frekt2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_dorling_frek = cartogram_dorling(prez_pow, "t2_Frekwencja", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_pow_frek = tm_shape(prez_pow) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_pow_dorling_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_pow_frek)
+
+tmap_save(dorling_pow_frek, filename = "pow_dorling_frek_nocol2.png")
+
+```
+
+## duda tura1
+
+```{r cartogram_powiaty_dorling_dudat2, message=FALSE, warning=FALSE, cache = TRUE}
+
+
+prez_pow_dorling_duda = cartogram_dorling(prez_pow, "t2_Andrzej.Sebastian.DUDA", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_pow_duda = tm_shape(prez_pow) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_pow_dorling_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_pow_duda)
+
+tmap_save(dorling_pow_duda, filename = "pow_dorling_duda_nocol2.png")
+
+```
+
+## duda tura2
+
+```{r cartogram_powiaty_dorling_dudat2, message=FALSE, warning=FALSE, cache = TRUE}
+
+
+prez_pow_dorling_duda = cartogram_dorling(prez_pow, "t2_Andrzej.Sebastian.DUDA", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_pow_duda = tm_shape(prez_pow) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_pow_dorling_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_pow_duda)
+
+tmap_save(dorling_pow_duda, filename = "pow_dorling_duda2_nocol.png")
+
+```
+
+## trzaskowski tura1
+
+```{r cartogram_powiaty_dorling_trzaskowskit2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_dorling_trzaskowski = cartogram_dorling(prez_pow, "t1_trzaskowski", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_pow_trzaskowski = tm_shape(prez_pow) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_pow_dorling_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_pow_trzaskowski)
+
+tmap_save(dorling_pow_trzaskowski, filename = "pow_dorling_trzaskowski1_nocol.png")
+
+```
+
+## trzaskowski tura2
+
+```{r cartogram_powiaty_dorling_trzaskowskit2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_dorling_trzaskowski = cartogram_dorling(prez_pow, "t2_trzaskowski", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_pow_trzaskowski = tm_shape(prez_pow) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_pow_dorling_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_pow_trzaskowski)
+
+tmap_save(dorling_pow_trzaskowski, filename = "pow_dorling_trzaskowski2_nocol.png")
+
+```
+
+# wielkopolska
+
+```{r cartogram_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180) %>%
+  st_cast("POLYGON")
+
+```
+
+## frekwencja
+
+```{r cartogram_wlkp_dorling, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_wlkp_dorling_frek = cartogram_dorling(prez_wlkp, "t2_Frekwencja", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_wlkp_frek = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_wlkp_dorling_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_wlkp_frek)
+
+tmap_save(dorling_wlkp_frek, filename = "wlkp_dorling_frek_nocol.png")
+
+```
+
+## duda tura1
+
+```{r cartogram_wlkp_dorling_duda_t1, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_wlkp_dorling_duda = cartogram_dorling(prez_wlkp, "t1_Andrzej.Sebastian.DUDA", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_wlkp_dorling_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_wlkp_duda)
+
+tmap_save(dorling_wlkp_duda, filename = "wlkp_dorling_duda1_nocol1.png")
+
+```
+
+## duda tura2
+
+```{r cartogram_wlkp_dorling_duda_t2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_wlkp_dorling_duda = cartogram_dorling(prez_wlkp, "t2_Andrzej.Sebastian.DUDA", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_wlkp_duda = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_wlkp_dorling_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_wlkp_duda)
+
+tmap_save(dorling_wlkp_duda, filename = "wlkp_dorling_duda2_nocol.png")
+
+```
+
+## trzaskowski tura1
+
+```{r cartogram_wlkp_dorling_trzaskowski_tura1, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_wlkp_dorling_trzaskowski = cartogram_dorling(prez_wlkp, "t1_trzaskowski", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_wlkp_trzaskowski = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_wlkp_dorling_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_wlkp_trzaskowski)
+
+tmap_save(dorling_wlkp_trzaskowski, filename = "wlkp_dorling_trzaskowski1_nocol.png")
+
+```
+## trzaskowski tura2
+
+```{r cartogram_wlkp_dorling_trzaskowski, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_wlkp_dorling_trzaskowski = cartogram_dorling(prez_wlkp, "t2_trzaskowski", m_weight = 0.1, k = 0.05, itermax = 1000)
+
+dorling_wlkp_trzaskowski = tm_shape(prez_wlkp) + 
+  tm_borders(lwd = 1) + 
+  tm_shape(prez_wlkp_dorling_trzaskowski) + 
+  tm_polygons(col = "palegreen3", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(dorling_wlkp_trzaskowski)
+
+tmap_save(dorling_wlkp_trzaskowski, filename = "wlkp_dorling_trzaskowski2_nocol.png")
+
+```

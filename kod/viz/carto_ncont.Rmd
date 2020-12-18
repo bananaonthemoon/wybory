@@ -1,0 +1,390 @@
+---
+title: "carto_ncont"
+author: "maria krol"
+date: "13 11 2020"
+output: html_document
+---
+  
+## Pakiet `cartogram`
+
+```{r cartogram_biblioteki, message=FALSE, warning=FALSE}
+
+library(cartogram)
+library(tmap)
+library(maptools)
+library(dplyr)
+library(sf)
+library(tmaptools)
+
+```  
+
+```{r cartogram_kolory, cache = TRUE, warning = FALSE, results = FALSE}
+
+paleta_green = get_brewer_pal("Greens", plot = FALSE)
+paleta_red = get_brewer_pal("Reds", plot = FALSE)
+paleta_blue = get_brewer_pal("Blues", plot = FALSE)
+
+```
+
+# wojewodztwa
+
+```{r cartogram_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+## frekwencja nocol
+
+```{r cartogram_wojewodztwa_noncontinuous_frek_nocol, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_frek = cartogram_ncont(prez_woj, "t2_Frekwencja")
+
+ncont_woj_frek = tm_shape(prez_woj_ncont_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_woj_frek)
+
+tmap_save(ncont_woj_frek, filename = "woj_ncont_frek_nocol.png")
+
+```
+
+## duda nocol
+
+```{r cartogram_wojewodztwa_noncontinuous_duda_nocol, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_duda = cartogram_ncont(prez_woj, "t2_Andrzej.Sebastian.DUDA")
+
+ncont_woj_duda = tm_shape(prez_woj_ncont_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_woj_duda)
+
+tmap_save(ncont_woj_duda, filename = "ncont_woj_duda_nocol.png")
+
+```
+
+## trzaskowkski nocol
+
+```{r cartogram_wojewodztwa_noncontinuous_trzaskowski_nocol, message=FALSE, warning=FALSE}
+
+prez_woj_ncont_trzaskowski = cartogram_ncont(prez_woj, "t2_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_woj_trzaskowski = tm_shape(prez_woj_ncont_trzaskowski) + 
+  tm_polygons(col = "#d3e7f5", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_woj_trzaskowski)
+
+tmap_save(ncont_woj_trzaskowski, filename = "woj_ncont_trzaskowski_nocol.png")
+
+```
+
+
+
+# powiaty
+
+```{r cartogram_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+## frek nocol
+```{r cartogram_powiaty_noncontinuous_frek_nocol, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_frek = cartogram_ncont(prez_pow, "t1_Frekwencja")
+
+ncont_pow_frek = tm_shape(prez_pow_ncont_frek) +
+   tm_polygons(col = "#edffee", lwd = 1) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_frek)
+
+tmap_save(ncont_pow_frek, filename = "pow_ncont_frek_nocol1.png")
+
+```
+
+```{r cartogram_powiaty_noncontinuous_frek_nocol2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_frek = cartogram_ncont(prez_pow, "t2_Frekwencja")
+
+ncont_pow_frek = tm_shape(prez_pow_ncont_frek) +
+   tm_polygons(col = "#edffee", lwd = 1) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_frek)
+
+tmap_save(ncont_pow_frek, filename = "pow_ncont_frek_nocol2.png")
+
+```
+
+## duda
+
+```{r cartogram_powiaty_noncontinuous_duda, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t2_Andrzej.Sebastian.DUDA")
+
+ncont_pow_duda = tm_shape(prez_pow_ncont_duda) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", style = "fixed", palette = paleta_red, lwd = 0.5, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 38, 43.5, 51, 61, 76), labels = c(" < 38", " 37 - 43,5", " 43,5 - 51", " 51 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_duda)
+
+tmap_save(ncont_pow_duda, filename = "pow_ncont_duda.png")
+
+```
+
+## duda nocol1
+
+```{r cartogram_powiaty_noncontinuous_duda_nocol1, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t1_Andrzej.Sebastian.DUDA")
+
+ncont_pow_duda = tm_shape(prez_pow_ncont_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_pow_duda)
+
+tmap_save(ncont_pow_duda, filename = "pow_ncont_duda_nocol1.png")
+
+```
+
+## duda nocol2
+
+```{r cartogram_powiaty_noncontinuous_duda_nocol2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_duda = cartogram_ncont(prez_pow, "t2_Andrzej.Sebastian.DUDA")
+
+ncont_pow_duda = tm_shape(prez_pow_ncont_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_pow_duda)
+
+tmap_save(ncont_pow_duda, filename = "pow_ncont_duda_nocol2.png")
+
+```
+
+## trzaskowski
+
+```{r cartogram_powiaty_noncontinuous_trzaskowski, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_trzaskowski = cartogram_ncont(prez_pow, "t2_Rafał.Kazimierz.TRZASKOWSKI", k = 5)
+
+ncont_pow_trzaskowski = tm_shape(prez_pow) +
+  tm_borders(lwd = 0.5) +  
+  tm_shape(prez_pow_ncont_trzaskowski) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", style = "fixed", palette = paleta_blue, lwd = 0.5, title = "Odsetek głosów na \nRafała Trzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_pow_trzaskowski)
+
+tmap_save(ncont_pow_trzaskowski, filename = "pow_ncont_trzaskowski_x.png")
+
+```
+
+## trzaskowski nocol
+
+```{r cartogram_powiaty_noncontinuous_trzaskowski_nocol1, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_trzaskowski = cartogram_ncont(prez_pow, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_pow_trzaskowski = tm_shape(prez_pow_ncont_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_pow_trzaskowski)
+
+tmap_save(ncont_pow_trzaskowski, filename = "pow_ncont_trzaskowski1_nocol.png")
+
+```
+
+## trzaskowski nocol
+
+```{r cartogram_powiaty_noncontinuous_trzaskowski2_nocol2, message=FALSE, warning=FALSE, cache = TRUE}
+
+prez_pow_ncont_trzaskowski = cartogram_ncont(prez_pow, "t2_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_pow_trzaskowski = tm_shape(prez_pow_ncont_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_pow_trzaskowski)
+
+tmap_save(ncont_pow_trzaskowski, filename = "pow_ncont_trzaskowski2_nocol.png")
+
+```
+
+
+# wielkopolska
+
+```{r cartogram_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+## frekwencjatura1
+
+```{r cartogram_wlkp_noncontinuous_frek1, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t1_Frekwencja")
+
+ncont_wlkp_frek = tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons("t1_Frekwencja", style = "fixed", palette = paleta_green, lwd = 0.5, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 63, 65, 68,70, 80), labels = c(" < 63", " 63 - 65", " 65 - 68", " 68 - 70", " > 70")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_frek)
+
+tmap_save(ncont_wlkp_frek, filename = "wlkp_ncont_frek1.png")
+
+```
+
+## frekwencja nocol tura1
+
+```{r cartogram_wlkp_noncontinuous_frek_nocol2, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t1_Frekwencja")
+
+ncont_wlkp_frek = tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 83), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_frek)
+
+tmap_save(ncont_wlkp_frek, filename = "wlkp_ncont_frek1_nocol.png")
+
+```
+
+## frekwencja nocol tura2 
+
+```{r cartogram_wlkp_noncontinuous_frek_nocol2, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_frek = cartogram_ncont(prez_wlkp, "t2_Frekwencja")
+
+ncont_wlkp_frek = tm_shape(prez_wlkp_ncont_frek) + 
+  tm_polygons(col = "#BDE5B7", lwd = 1, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 63, 65, 68,70, 80), labels = c(" < 63", " 63 - 65", " 65 - 68", " 68 - 70", " > 70")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_frek)
+
+tmap_save(ncont_wlkp_frek, filename = "wlkp_ncont_frek2_nocol.png")
+
+```
+
+## duda
+
+```{r cartogram_wlkp_noncontinuous_duda, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t2_Andrzej.Sebastian.DUDA")
+
+ncont_wlkp_duda = tm_shape(prez_wlkp_ncont_duda) + 
+ tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = "Reds", border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 47, 56, 61, 72), labels = c(" < 42", " 42 - 47", " 47 - 56", " 56 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+  
+print(ncont_wlkp_duda)
+
+tmap_save(ncont_wlkp_duda, filename = "wlkp_ncont_duda.png")
+
+```
+
+## duda nocol
+
+```{r cartogram_wlkp_noncontinuous_duda1_nocol, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t1_Andrzej.Sebastian.DUDA")
+
+ncont_wlkp_duda = tm_shape(prez_wlkp) +
+  tm_borders(lwd = 0.5) +
+  tm_shape(prez_wlkp_ncont_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_wlkp_duda)
+
+tmap_save(ncont_wlkp_duda, filename = "wlkp_ncont_duda1_nocol.png")
+
+```
+
+## duda nocol
+
+```{r cartogram_wlkp_noncontinuous_duda2_nocol, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_duda = cartogram_ncont(prez_wlkp, "t2_Andrzej.Sebastian.DUDA")
+
+ncont_wlkp_duda = tm_shape(prez_wlkp) +
+  tm_borders(lwd = 0.5) +
+  tm_shape(prez_wlkp_ncont_duda) + 
+  tm_polygons(col = "#FCB195", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_wlkp_duda)
+
+tmap_save(ncont_wlkp_duda, filename = "wlkp_ncont_duda2_nocol.png")
+
+```
+
+## trzaskowski
+
+```{r cartogram_wlkp_noncontinuous_trzaskowski, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_trzaskowski = cartogram_ncont(prez_wlkp, "t2_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_wlkp_trzaskowski = tm_shape(prez_wlkp) +
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_blue, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 38, 45, 53, 58, 60), labels = c(" < 38", " 38 - 45", " 45 - 53", " 53 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(ncont_wlkp_trzaskowski)
+
+tmap_save(ncont_wlkp_trzaskowski, filename = "wlkp_ncont_trzaskowski.png")
+
+```
+
+## trzaskowski nocol
+
+```{r cartogram_wlkp_noncontinuous_trzaskowski1_nocol, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_trzaskowski = cartogram_ncont(prez_wlkp, "t1_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_wlkp_trzaskowski = tm_shape(prez_wlkp_ncont_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_wlkp_trzaskowski)
+
+tmap_save(ncont_wlkp_trzaskowski, filename = "wlkp_ncont_trzaskowski1_nocol.png")
+
+```
+
+## trzaskowski nocol
+
+```{r cartogram_wlkp_noncontinuous_trzaskowski2_nocol, message=FALSE, warning=FALSE}
+
+prez_wlkp_ncont_trzaskowski = cartogram_ncont(prez_wlkp, "t2_Rafał.Kazimierz.TRZASKOWSKI")
+
+ncont_wlkp_trzaskowski = tm_shape(prez_wlkp_ncont_trzaskowski) + 
+  tm_polygons(col = "#bcd6eb", lwd = 1) +
+  tm_layout(frame = FALSE)
+
+print(ncont_wlkp_trzaskowski)
+
+tmap_save(ncont_wlkp_trzaskowski, filename = "wlkp_ncont_trzaskowski2_nocol.png")
+
+```

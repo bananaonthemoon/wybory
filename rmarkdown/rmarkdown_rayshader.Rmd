@@ -1,0 +1,193 @@
+---
+title: "rmarkdown_rayshader"
+author: "maria krol"
+date: "4 11 2020"
+output: html_document
+---
+
+## Pakiet `cartogram`
+
+
+```{r rayshader_biblioteki, message=FALSE, warning=FALSE}
+
+library(sf)
+library(rayshader)
+library(tidyverse)
+library(RColorBrewer)
+library(classInt)
+
+```
+
+### Na przykładzie województw
+```{r rayshader_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_w, stringsAsFactors=FALSE)
+
+```
+
+```{r rayshader_wojewodztwa_frek, cache = TRUE, warning = FALSE, results = FALSE}
+
+woj_frek1 <- classIntervals(prez_woj$t1_Frekwencja, n = 5, style = "fixed", fixedBreaks = c(0, 61, 62, 64, 66, 80))
+prez_woj = prez_woj %>% mutate(frek1 = cut(t1_Frekwencja, woj_frek1$brks, include.lowest = T))
+                               
+gg_prez_woj = ggplot(prez_woj) +
+  geom_sf(aes(fill = frek1), size = 0.4) +
+  scale_fill_brewer("Frekwencja w pierwszej turze \nwyborów prezydenckich w 2020 r.", palette = "Greens", direction = 1, 
+                    labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66"))
+
+plot(gg_prez_woj)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_wojewodztwa_duda, cache = TRUE, warning = FALSE, results = FALSE}
+
+woj_duda <- classIntervals(prez_woj$t1_Andrzej.Sebastian.DUDA, n = 5, style = "fixed", fixedBreaks = c(0, 36, 40.3, 47, 53, 61))
+prez_woj = prez_woj %>% mutate(duda = cut(t1_Andrzej.Sebastian.DUDA, woj_duda$brks, include.lowest = T))
+                               
+gg_prez_woj = ggplot(prez_woj) +
+  geom_sf(aes(fill = duda), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na \nAndrzeja Dudę w I turze", palette = "Reds", direction = 1, 
+                    labels = c(" < 36", " 36 - 40,3", " 40,3 - 47", " 47 - 53", " > 53"))
+
+plot(gg_prez_woj)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_wojewodztwa_trzaskowski, cache = TRUE, warning = FALSE, results = FALSE}
+
+woj_trzaskowski <- classIntervals(prez_woj$t1_Rafał.Kazimierz.TRZASKOWSKI, n = 5, style = "fixed", fixedBreaks = c(0, 21, 27, 33.5, 36, 39))
+prez_woj = prez_woj %>% mutate(trzaskowski = cut(t1_Rafał.Kazimierz.TRZASKOWSKI, woj_trzaskowski$brks, include.lowest = T))
+                               
+gg_prez_woj = ggplot(prez_woj) +
+  geom_sf(aes(fill = trzaskowski), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na Rafała \nTrzaskowskiego w I turze", palette = "Blues", direction = 1, 
+                    labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36"))
+
+plot(gg_prez_woj)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+
+### Na przykładzie powiatów
+
+```{r rayshader_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE)
+
+```
+
+```{r rayshader_powiaty_frek, cache = TRUE, warning = FALSE, results = FALSE}
+
+pow_frek1 <- classIntervals(prez_pow$t1_Frekwencja, n = 5, style = "fixed", fixedBreaks = c(0, 57, 60, 64, 67, 80))
+prez_pow = prez_pow %>% mutate(frek1 = cut(t1_Frekwencja, pow_frek1$brks, include.lowest = T))
+                               
+gg_prez_pow = ggplot(prez_pow) +
+  geom_sf(aes(fill = frek1), size = 0.4) +
+  scale_fill_brewer("Frekwencja w pierwszej turze \nwyborów prezydenckich w 2020 r.", palette = "Greens", direction = 1, 
+                    labels = c(" < 57", " 57 - 60", " 60 - 64", " 64 - 67", " > 67"))
+
+plot(gg_prez_pow)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_powiaty_duda, cache = TRUE, warning = FALSE, results = FALSE}
+
+pow_duda <- classIntervals(prez_pow$t1_Andrzej.Sebastian.DUDA, n = 5, style = "fixed", fixedBreaks = c(0, 38, 43.5, 51, 61, 76))
+prez_pow = prez_pow %>% mutate(duda = cut(t1_Andrzej.Sebastian.DUDA, pow_duda$brks, include.lowest = T))
+                               
+gg_prez_pow = ggplot(prez_pow) +
+  geom_sf(aes(fill = duda), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na \nAndrzeja Dudę w I turze", palette = "Reds", direction = 1, 
+                    labels = c(" < 38", " 38 - 43,5", " 43,5 - 51", " 51 - 61", " > 61"))
+
+plot(gg_prez_pow)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_powiaty_trzaskowski, cache = TRUE, warning = FALSE, results = FALSE}
+
+pow_trzaskowski <- classIntervals(prez_pow$t1_Rafał.Kazimierz.TRZASKOWSKI, n = 5, style = "fixed", fixedBreaks = c(0, 17, 24, 30, 35, 53))
+prez_pow = prez_pow %>% mutate(trzaskowski = cut(t1_Rafał.Kazimierz.TRZASKOWSKI, pow_trzaskowski$brks, include.lowest = T))
+                               
+gg_prez_pow = ggplot(prez_pow) +
+  geom_sf(aes(fill = trzaskowski), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na Rafała \nTrzaskowskiego w I turze", palette = "Blues", direction = 1, 
+                    labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35"))
+
+plot(gg_prez_pow)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+
+### Na przykładzie województwa wielkopolskiego
+
+```{r rayshader_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_ww = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_ww, stringsAsFactors=FALSE)
+
+```
+
+```{r rayshader_wlkp_frek, cache = TRUE, warning = FALSE, results = FALSE}
+
+wlkp_frek1 <- classIntervals(prez_wlkp$t1_Frekwencja, n = 5, style = "fixed", fixedBreaks = c(0, 58, 61, 64, 67, 80))
+prez_wlkp = prez_wlkp %>% mutate(frek1 = cut(t1_Frekwencja, wlkp_frek1$brks, include.lowest = T))
+                               
+gg_prez_wlkp = ggplot(prez_wlkp) +
+  geom_sf(aes(fill = frek1), size = 0.4) +
+  scale_fill_brewer("Frekwencja w pierwszej turze \nwyborów prezydenckich w 2020 r.", palette = "Greens", direction = 1, 
+                    labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67"))
+
+plot(gg_prez_wlkp)
+
+#plot_gg(gg_prez_wlkp, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_wlkp_duda, cache = TRUE, warning = FALSE, results = FALSE}
+
+wlkp_duda <- classIntervals(prez_wlkp$t1_Andrzej.Sebastian.DUDA, n = 5, style = "fixed", fixedBreaks = c(0, 35, 43, 50, 57.5, 80))
+prez_wlkp = prez_wlkp %>% mutate(duda = cut(t1_Andrzej.Sebastian.DUDA, wlkp_duda$brks, include.lowest = T))
+                               
+gg_prez_wlkp = ggplot(prez_wlkp) +
+  geom_sf(aes(fill = duda), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na \nAndrzeja Dudę w I turze", palette = "Reds", direction = 1, 
+                    labels = c(" < 35", " 35 - 43", " 43 - 50", " 50 - 57,5", " > 57,5"))
+
+plot(gg_prez_wlkp)
+
+#plot_gg(gg_prez_wlkp, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+```
+
+```{r rayshader_wlkp_trzaskowski, cache = TRUE, warning = FALSE, results = FALSE}
+
+wlkp_trzaskowski <- classIntervals(prez_wlkp$t1_Rafał.Kazimierz.TRZASKOWSKI, n = 5, style = "fixed", fixedBreaks = c(0, 17, 21, 28, 34.5, 51))
+prez_wlkp = prez_wlkp %>% mutate(trzaskowski = cut(t1_Rafał.Kazimierz.TRZASKOWSKI, wlkp_trzaskowski$brks, include.lowest = T))
+                               
+gg_prez_wlkp = ggplot(prez_wlkp) +
+  geom_sf(aes(fill = trzaskowski), size = 0.4) +
+  scale_fill_brewer("Odsetek głosów na Rafała \nTrzaskowskiego w I turze", palette = "Blues", direction = 1, 
+                    labels = c(" < 17", " 17 - 21", " 21 - 28", " 28 - 34,5", " > 35,5"))
+
+plot(gg_prez_wlkp)
+
+#plot_gg(gg_prez_woj, width = 5, height = 4, scale = 100, multicore = TRUE, shadow_intensity = 0.5, preview = TRUE)
+#render_depth(focallength=100,focus=0.72)
+plot_gg(gg_prez_wlkp, multicore = TRUE, width = 5 ,height = 4, scale = 200, fov = 70)
+#render_depth(focallength=100,focus=0.72)
+```

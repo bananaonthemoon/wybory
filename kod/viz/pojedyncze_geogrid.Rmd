@@ -1,0 +1,1033 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r geogrid_biblioteki, message=FALSE, warning=FALSE}
+
+library(geogrid)
+library(sf)
+library(tidyverse)
+library(tmap)
+library(tmaptools)
+
+```
+
+### Na przykładzie województw
+```{r geogrid_wojewodztwa_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_woj = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wojewodztwa.gpkg"
+prez_woj = read_sf(prez_woj, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+```
+
+```{r geogrid_wojewodztwa_palety, message=FALSE, warning=FALSE}
+
+paleta_b = c("#DCC2C4", "#C4A1A3", "#AD7F83", "#955E62", "#7D3C41")
+
+paleta_a = c("#EDE0D4", "#E1C2A3", "#D8AD83", "#B08968", "#9C6644")
+
+paleta_frek = c("#DCDDAF", "#B2B366", "#999E41", "#888913", "#7E7E0A")
+
+```
+
+```{r geogrid_wojewodztwa_rawplot_duda_1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_duda = tm_shape(prez_woj) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = "Reds", border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40, 45, 53, 61), labels = c(" < 36", " 36 - 40", " 40 - 45", " 53 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_duda)
+
+tmap_save(woj_rawplot_duda, filename = "woj_rawplot_duda1.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot_duda_2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_duda = tm_shape(prez_woj) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = "Reds", border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 47, 56, 61, 72), labels = c(" < 42", " 42 - 47", " 47 - 56", " 56 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_duda)
+
+tmap_save(woj_rawplot_duda, filename = "woj_rawplot_duda2.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot_frek_1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_frek = tm_shape(prez_woj) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 71), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_frek)
+
+tmap_save(woj_rawplot_frek, filename = "woj_rawplot_frek1.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot_frek_2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_frek = tm_shape(prez_woj) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 63, 65, 68,70, 80), labels = c(" < 63", " 63 - 65", " 65 - 68", " 68 - 70", " > 70")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_frek)
+
+tmap_save(woj_rawplot_frek, filename = "woj_rawplot_frek2.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot_trzask1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_trzaskowski = tm_shape(prez_woj) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 38.6), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_trzaskowski)
+
+tmap_save(woj_rawplot_trzaskowski, filename = "woj_rawplot_trzaskowski1.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot_trzask2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_trzaskowski = tm_shape(prez_woj) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 38, 45, 53, 58, 60), labels = c(" < 38", " 38 - 45", " 45 - 53", " 53 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_trzaskowski)
+
+tmap_save(woj_rawplot_trzaskowski, filename = "woj_rawplot_trzaskowski2.png")
+```
+
+```{r geogrid_wojewodztwa_rawplot4, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+woj_rawplot_roznica = tm_shape(prez_woj) + 
+  tm_polygons("roznica", palette = paleta_div, border.alpha = 0.3, title = "Różnica procentowa \nw II turze wyborów",
+              breaks = c(-20,-10,0, 0,20,42), labels = c(" < 15", " 0 - 10", " ", " 0 - 20", " > 20")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_rawplot_roznica)
+
+tmap_save(woj_rawplot_roznica, filename = "woj_rawplot_roznica.png")
+```
+
+```{r geogrid_wojewodztwa_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_woj, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_woj = calculate_grid(shape = prez_woj, grid_type = "regular", seed = 2)
+resultreg_woj = assign_polygons(prez_woj, new_cells_reg_woj)
+
+```
+
+```{r geogrid_wojewodztwa_regplot_duda1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_duda = tm_shape(resultreg_woj) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40, 45, 53, 61), labels = c(" < 36", " 36 - 40", " 40 - 45", " 45 - 53", " > 53")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_duda)
+
+tmap_save(woj_regplot_duda, filename = "woj_regplot_duda1.png")
+```
+
+```{r geogrid_wojewodztwa_regplot_duda2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_duda = tm_shape(resultreg_woj) +
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 47, 56, 61, 72), labels = c(" < 42", " 42 - 47", " 47 - 56", " 56 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_duda)
+
+tmap_save(woj_regplot_duda, filename = "woj_regplot_duda2.png")
+```
+```{r geogrid_wojewodztwa_regplot_frek1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_frek = tm_shape(resultreg_woj) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 71), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_frek)
+
+tmap_save(woj_regplot_frek, filename = "woj_regplot_frek1.png")
+```
+
+```{r geogrid_wojewodztwa_regplot_frek2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_frek = tm_shape(resultreg_woj) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 63, 65, 68,70, 80), labels = c(" < 63", " 63 - 65", " 65 - 68", " 68 - 70", " > 70")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_frek)
+
+tmap_save(woj_regplot_frek, filename = "woj_regplot_frek2.png")
+```
+
+```{r geogrid_wojewodztwa_regplot_trzask1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_trzaskowski = tm_shape(resultreg_woj) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 38.6), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_trzaskowski)
+
+tmap_save(woj_regplot_trzaskowski, filename = "woj_regplot_trzaskowski1.png")
+```
+```{r geogrid_wojewodztwa_regplot_trzask2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_trzaskowski = tm_shape(resultreg_woj) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 38, 45, 53, 58, 60), labels = c(" < 38", " 38 - 45", " 45 - 53", " 53 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_trzaskowski)
+
+tmap_save(woj_regplot_trzaskowski, filename = "woj_regplot_trzaskowski2.png")
+```
+
+```{r geogrid_wojewodztwa_regplot4, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+woj_regplot_roznica = tm_shape(resultreg_woj) + 
+  tm_polygons("roznica", palette = paleta_div, border.alpha = 0.3, title = "Różnica procentowa \nw II turze wyborów",
+              breaks = c(-20,-10,-5, 5,20,42), labels = c(" > 10", " 0 - 10", " do 5 punktów procentowych różnicy ", " 0 - 20", " > 20")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_regplot_roznica)
+
+tmap_save(woj_regplot_roznica, filename = "woj_regplot_roznica.png")
+```
+
+```{r geogrid_wojewodztwa_obliczenia_hexplot, message=FALSE, warning=FALSE, cache=TRUE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_woj, learning_rate = 0.4, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_woj = calculate_grid(shape = prez_woj, grid_type = "hexagonal", seed = 2)
+resulthex_woj = assign_polygons(prez_woj, new_cells_hex_woj)
+
+```
+
+```{r geogrid_wojewodztwa_hexplot_duda1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_duda = tm_shape(resulthex_woj) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 40, 45, 53, 61), labels = c(" < 36", " 36 - 40", " 40 - 45", " 45 - 53", " > 53")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_duda)
+
+tmap_save(woj_hexplot_duda, filename = "woj_hexplot_duda1.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot_duda2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_duda = tm_shape(resulthex_woj) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 47, 56, 61, 72), labels = c(" < 42", " 42 - 47", " 47 - 56", " 56 - 61", " > 61")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_duda)
+
+tmap_save(woj_hexplot_duda, filename = "woj_hexplot_duda2.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot_frek1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_frek = tm_shape(resulthex_woj) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 61, 62, 64, 66, 71), labels = c(" < 61", " 61 - 62", " 62 - 64", " 64 - 66", " > 66")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_frek)
+
+tmap_save(woj_hexplot_frek, filename = "woj_hexplot_frek1.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_frek = tm_shape(resulthex_woj) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 63, 65, 68,70, 80), labels = c(" < 63", " 63 - 65", " 65 - 68", " 68 - 70", " > 70")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_frek)
+
+tmap_save(woj_hexplot_frek, filename = "woj_hexplot_frek2.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot_trzask1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_trzaskowski = tm_shape(resulthex_woj) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 21, 27, 33.5, 36, 38.6), labels = c(" < 21", " 21 - 27", " 27 - 33,5", " 33,5 - 36", " > 36")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_trzaskowski)
+
+tmap_save(woj_hexplot_trzaskowski, filename = "woj_hexplot_trzaskowski1.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot_trzask2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_trzaskowski = tm_shape(resulthex_woj) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 38, 45, 53, 58, 60), labels = c(" < 38", " 38 - 45", " 45 - 53", " 53 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_trzaskowski)
+
+tmap_save(woj_hexplot_trzaskowski, filename = "woj_hexplot_trzaskowski2.png")
+```
+
+```{r geogrid_wojewodztwa_hexplot4, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+woj_hexplot_roznica = tm_shape(resulthex_woj) + 
+  tm_polygons("roznica", palette = paleta_div, border.alpha = 0.3, title = "Różnica procentowa \nw II turze wyborów",
+              breaks = c(-20,-10,-5, 5,20,42), labels = c(" > 10", " 0 - 10", " do 5 punktów procentowych różnicy ", " 0 - 20", " > 20")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(woj_hexplot_roznica)
+
+tmap_save(woj_hexplot_roznica, filename = "woj_hexplot_roznica.png")
+```
+
+### Na przykładzie powiatów
+```{r geogrid_powiaty_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_p = "https://raw.github.com/bananaonthemoon/wybory/master/dane/powiaty.gpkg"
+prez_pow = read_sf(prez_p, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+prez_pow$roznica_glosow_t2 = prez_pow$t2_Andrzej.Sebastian.DUDA - prez_pow$t2_Rafał.Kazimierz.TRZASKOWSKI
+prez_pow$roznica_frek = prez_pow$t2_Frekwencja - prez_pow$t1_Frekwencja
+```
+
+```{r geogrid_powiaty_rawplot_duda1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_duda = tm_shape(prez_pow) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 43, 51, 60, 76), labels = c(" < 36", " 36 - 43", " 43 - 51", " 51 - 60", " > 60")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_duda)
+
+tmap_save(pow_rawplot_duda, filename = "pow_rawplot_duda1.png")
+```
+
+```{r geogrid_powiaty_rawplot_duda2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_duda = tm_shape(prez_pow) +
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 43, 51, 58, 69, 86), labels = c(" < 43", " 43 - 51", " 51 - 58", " 58 - 69", " > 69")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_duda)
+
+tmap_save(pow_rawplot_duda, filename = "pow_rawplot_duda2.png")
+```
+
+```{r geogrid_powiaty_rawplot_frek_t1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_frek = tm_shape(prez_pow) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 63, 67, 76), labels = c(" < 57", " 57 - 60", " 60 - 63", " 63 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_rawplot_frek)
+
+tmap_save(pow_rawplot_frek, filename = "pow_rawplot_frek1.png")
+
+```
+
+```{r geogrid_powiaty_rawplot_frek_t2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_frek = tm_shape(prez_pow) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 80), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_frek)
+
+tmap_save(pow_rawplot_frek, filename = "pow_rawplot_frek2.png")
+
+```
+
+```{r geogrid_powiaty_rawplot_trzask_t1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_trzaskowski = tm_shape(prez_pow) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_trzaskowski)
+
+tmap_save(pow_rawplot_trzaskowski, filename = "pow_rawplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_powiaty_rawplot_trzask_t2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_trzaskowski = tm_shape(prez_pow) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 42, 50, 57, 73), labels = c(" < 32", " 32 - 42", " 42 - 50", " 50 - 57", " > 57")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_trzaskowski)
+
+tmap_save(pow_rawplot_trzaskowski, filename = "pow_rawplot_trzaskowski2.png")
+
+```
+
+```{r geogrid_powiaty_rawplot4, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+pow_rawplot_roznica = tm_shape(prez_pow) + 
+  tm_polygons("roznica", palette = paleta_div, border.alpha = 0.3, title = "Różnica procentowa \nw II turze wyborów",
+              breaks = c(-45, -14, 0, 0, 37, 70), labels = c(" > 14", "5 - 14", " 5 - 15 ", " 15 - 37", " > 37")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_rawplot_roznica)
+
+tmap_save(pow_rawplot_roznica, filename = "pow_rawplot_roznica.png")
+
+```
+
+```{r geogrid_powiaty_obliczenia_hexplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_pow, learning_rate = 0.4, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_pow = calculate_grid(shape = prez_pow, grid_type = "hexagonal", seed = 2)
+resulthex_pow = assign_polygons(prez_pow, new_cells_hex_pow)
+
+```
+
+```{r geogrid_powiaty_hexplot_duda1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_duda = tm_shape(resulthex_pow) +
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 43, 51, 60, 76), labels = c(" < 36", " 36 - 43", " 43 - 51", " 51 - 60", " > 60")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_hexplot_duda)
+
+tmap_save(pow_hexplot_duda, filename = "pow_hexplot_duda1.png")
+
+```
+
+```{r geogrid_powiaty_hexplot_duda2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_duda = tm_shape(resulthex_pow) +
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 43, 51, 58, 69, 86), labels = c(" < 43", " 43 - 51", " 51 - 58", " 58 - 69", " > 69")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_hexplot_duda)
+
+tmap_save(pow_hexplot_duda, filename = "pow_hexplot_duda2.png")
+
+```
+
+```{r geogrid_powiaty_hexplot_frek1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_frek = tm_shape(resulthex_pow) +
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 63, 67, 76), labels = c(" < 57", " 57 - 60", " 60 - 63", " 63 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_hexplot_frek)
+
+tmap_save(pow_hexplot_frek, filename = "pow_hexplot_frek1.png")
+
+```
+
+```{r geogrid_powiaty_hexplot2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_frek = tm_shape(resulthex_pow) +
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+             breaks = c(0, 62, 65, 68, 71, 80), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_hexplot_frek)
+
+tmap_save(pow_hexplot_frek, filename = "pow_hexplot_frek2.png")
+
+```
+
+```{r geogrid_powiaty_hexplot_trzask1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_trzaskowski = tm_shape(resulthex_pow) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_hexplot_trzaskowski)
+
+tmap_save(pow_hexplot_trzaskowski, filename = "pow_hexplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_powiaty_hexplot_trzask2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+pow_hexplot_trzaskowski = tm_shape(resulthex_pow) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 42, 50, 57, 73), labels = c(" < 32", " 32 - 42", " 42 - 50", " 50 - 57", " > 57")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_hexplot_trzaskowski)
+
+tmap_save(pow_hexplot_trzaskowski, filename = "pow_hexplot_trzaskowski2.png")
+
+```
+
+```{r geogrid_powiaty_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_pow, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_pow = calculate_grid(shape = prez_pow, grid_type = "regular", seed = 2)
+resultreg_pow = assign_polygons(prez_pow, new_cells_reg_pow)
+
+```
+
+```{r geogrid_powiaty_regplot_duda1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_duda = tm_shape(resultreg_pow) +
+ tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 36, 43, 51, 60, 76), labels = c(" < 36", " 36 - 43", " 43 - 51", " 51 - 60", " > 60")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_regplot_duda)
+
+tmap_save(pow_regplot_duda, filename = "pow_regplot_duda1.png")
+
+```
+
+```{r geogrid_powiaty_regplot_duda2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_duda = tm_shape(resultreg_pow) +
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 43, 51, 58, 69, 86), labels = c(" < 43", " 43 - 51", " 51 - 58", " 58 - 69", " > 69")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(pow_regplot_duda)
+
+tmap_save(pow_regplot_duda, filename = "pow_regplot_duda2.png")
+
+```
+
+```{r geogrid_powiaty_regplot_tura1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_frek = tm_shape(resultreg_pow) +
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 57, 60, 63, 67, 76), labels = c(" < 57", " 57 - 60", " 60 - 63", " 63 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_regplot_frek)
+
+tmap_save(pow_regplot_frek, filename = "pow_regplot_frek1.png")
+
+```
+
+```{r geogrid_powiaty_regplot_frek2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_frek = tm_shape(resultreg_pow) +
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 80), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_regplot_frek)
+
+tmap_save(pow_regplot_frek, filename = "pow_regplot_frek2.png")
+
+```
+
+```{r geogrid_powiaty_regplot_roznica_frek, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_frek = tm_shape(resultreg_pow) +
+  tm_polygons("roznica_frek", palette = paleta_frek, border.alpha = 0.3, title = "Różnica frekwencji \nmiędzy I i II turą ",
+              breaks = c(0, 2.5, 3.5, 4.5, 5.5, 9), labels = c(" < 2,5%", " 2,5 - 3,5%", " 3,5 - 4,5%", " 4,5- 5,5%", " > 5,5%")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_regplot_frek)
+
+tmap_save(pow_regplot_frek, filename = "pow_regplot_roznica_frek.png")
+
+```
+
+```{r geogrid_powiaty_regplot_trzask1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_trzaskowski = tm_shape(resultreg_pow) + 
+tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 24, 30, 35, 53), labels = c(" < 17", " 17 - 24", " 24 - 30", " 30 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_regplot_trzaskowski)
+
+tmap_save(pow_regplot_trzaskowski, filename = "pow_regplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_powiaty_regplot_trzask2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+pow_regplot_trzaskowski = tm_shape(resultreg_pow) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 42, 50, 57, 73), labels = c(" < 32", " 32 - 42", " 42 - 50", " 50 - 57", " > 57")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+
+print(pow_regplot_trzaskowski)
+
+tmap_save(pow_regplot_trzaskowski, filename = "pow_regplot_trzaskowski2.png")
+
+```
+
+# Na przykładzie Wielkopolski
+```{r geogrid_wlkp_dane, cache = TRUE, warning = FALSE, results = FALSE}
+
+prez_w = "https://raw.github.com/bananaonthemoon/wybory/master/dane/wielkopolska.gpkg"
+prez_wlkp = read_sf(prez_w, stringsAsFactors=FALSE) %>%
+  st_transform(crs = 2180)
+
+prez_wlkp$roznica = prez_wlkp$t2_Andrzej.Sebastian.DUDA - prez_wlkp$t2_Rafał.Kazimierz.TRZASKOWSKI
+```
+
+```{r geogrid_wlkp_rawplot_duda_1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_duda = tm_shape(prez_wlkp) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 35, 42, 50,58, 77), labels = c(" < 35", " 35 - 42", " 42 - 50", " 50 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_duda)
+
+tmap_save(wlkp_rawplot_duda, filename = "wlkp_rawplot_duda1.png")
+
+```
+
+```{r geogrid_wlkp_rawplot_duda_t2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_duda = tm_shape(prez_wlkp) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 51, 60, 68, 85), labels = c(" < 42", " 42 - 51", " 51 - 60", " 60 - 68", " > 68")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_duda)
+
+tmap_save(wlkp_rawplot_duda, filename = "wlkp_rawplot_duda2.png")
+
+```
+
+```{r geogrid_wlkp_rawplot_frek1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_frek = tm_shape(prez_wlkp) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 58, 61, 64, 67, 80), labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_frek)
+
+tmap_save(wlkp_rawplot_frek, filename = "wlkp_rawplot_frek1.png")
+
+```
+
+```{r geogrid_wlkp_rawplot_frek_t2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_frek = tm_shape(prez_wlkp) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 83), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_frek)
+
+tmap_save(wlkp_rawplot_frek, filename = "wlkp_rawplot_frek2.png")
+
+```
+
+```{r geogrid_wlkp_rawplot_trzask1, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_trzaskowski = tm_shape(prez_wlkp) + 
+  tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 21, 29, 35, 51), labels = c(" < 17", " 17 - 21", " 21 - 29", " 29 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_trzaskowski)
+
+tmap_save(wlkp_rawplot_trzaskowski, filename = "wlkp_rawplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_wlkp_rawplot_trzask_t2, message=FALSE, warning=FALSE}
+
+# rawplot -----------------------------------------------------------------
+
+wlkp_rawplot_trzaskowski = tm_shape(prez_wlkp) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 40, 49, 58, 76), labels = c(" < 32", " 32 - 40", " 40 - 49", " 49 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_rawplot_trzaskowski)
+
+tmap_save(wlkp_rawplot_trzaskowski, filename = "wlkp_rawplot_trzaskowski2.png")
+
+```
+
+```{r geogrid_wlkp_obliczenia_hexplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+set.seed(32)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_wlkp, learning_rate = 0.4, grid_type = "hexagonal", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_hex_wlkp = calculate_grid(shape = prez_wlkp, grid_type = "hexagonal", seed = 2)
+resulthex_wlkp = assign_polygons(prez_wlkp, new_cells_hex_wlkp)
+
+```
+
+```{r geogrid_wlkp_hexplot1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_duda = tm_shape(resulthex_wlkp) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 35, 42, 50,58, 77), labels = c(" < 35", " 35 - 42", " 42 - 50", " 50 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_duda)
+
+tmap_save(wlkp_hexplot_duda, filename = "wlkp_hexplot_duda1.png")
+
+```
+
+```{r geogrid_wlkp_hexplot11, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_duda = tm_shape(resulthex_wlkp) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 51, 60, 68, 85), labels = c(" < 42", " 42 - 51", " 51 - 60", " 60 - 68", " > 68")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_duda)
+
+tmap_save(wlkp_hexplot_duda, filename = "wlkp_hexplot_duda2.png")
+
+```
+
+```{r geogrid_wlkp_hexplot_frek1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_frek = tm_shape(resulthex_wlkp) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 58, 61, 64, 67, 80), labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_frek)
+
+tmap_save(wlkp_hexplot_frek, filename = "wlkp_hexplot_frek1.png")
+
+```
+
+```{r geogrid_wlkp_hexplot2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_frek = tm_shape(resulthex_wlkp) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 83), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_frek)
+
+tmap_save(wlkp_hexplot_frek, filename = "wlkp_hexplot_frek2.png")
+
+```
+
+
+```{r geogrid_wlkp_hexplot_trzask1, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_trzaskowski = tm_shape(resulthex_wlkp) + 
+tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 21 , 29, 35, 38.6), labels = c(" < 17", " 17 - 21", " 21 - 29", " 29 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_trzaskowski)
+
+tmap_save(wlkp_hexplot_trzaskowski, filename = "wlkp_hexplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_wlkp_hexplot_trzask_t2, message=FALSE, warning=FALSE}
+
+# hexplot -----------------------------------------------------------------
+
+wlkp_hexplot_trzaskowski = tm_shape(resulthex_wlkp) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 40, 49, 58, 76), labels = c(" < 32", " 32 - 40", " 40 - 49", " 49 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_hexplot_trzaskowski)
+
+tmap_save(wlkp_hexplot_trzaskowski, filename = "wlkp_hexplot_trzaskowski2.png")
+
+```
+
+```{r geogrid_wlkp_obliczenia_regplot, cache = TRUE, warning = FALSE, results = FALSE}
+
+# regplot -----------------------------------------------------------------
+
+set.seed(23)
+
+par(mfrow = c(2, 3), mar = c(0, 0, 2, 0))
+for (i in 1:6) {
+  new_cells = calculate_grid(shape = prez_wlkp, grid_type = "regular", seed = i)
+  plot(new_cells, main = paste("Seed", i, sep = " "))
+}
+
+new_cells_reg_wlkp = calculate_grid(shape = prez_wlkp, grid_type = "regular", seed = 2)
+resultreg_wlkp = assign_polygons(prez_wlkp, new_cells_reg_wlkp)
+
+```
+
+```{r geogrid_wlkp_regplot_duda1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_duda = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t1_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w I turze",
+              breaks = c(0, 35, 42, 50,58, 77), labels = c(" < 35", " 35 - 42", " 42 - 50", " 50 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_duda)
+
+tmap_save(wlkp_regplot_duda, filename = "wlkp_regplot_duda1.png")
+
+```
+
+```{r geogrid_wlkp_regplot_duda2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_duda = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t2_Andrzej.Sebastian.DUDA", palette = paleta_a, border.alpha = 0.3, title = "Odsetek głosów na \nAndrzeja Dudę w II turze",
+              breaks = c(0, 42, 51, 60, 68, 85), labels = c(" < 42", " 42 - 51", " 51 - 60", " 60 - 68", " > 68")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_duda)
+
+tmap_save(wlkp_regplot_duda, filename = "wlkp_regplot_duda2.png")
+
+```
+
+```{r geogrid_wlkp_regplot_frek1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_frek = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t1_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w I turze [%]",
+              breaks = c(0, 58, 61, 64, 67, 80), labels = c(" < 58", " 58 - 61", " 61 - 64", " 64 - 67", " > 67")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_frek)
+
+tmap_save(wlkp_regplot_frek, filename = "wlkp_regplot_frek1.png")
+
+```
+
+```{r geogrid_wlkp_regplot_frek_t2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_frek = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t2_Frekwencja", palette = paleta_frek, border.alpha = 0.3, title = "Frekwencja w II turze [%]",
+              breaks = c(0, 62, 65, 68, 71, 83), labels = c(" < 62", " 62 - 65", " 65 - 68", " 68 - 71", " > 71")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_frek)
+
+tmap_save(wlkp_regplot_frek, filename = "wlkp_regplot_frek2.png")
+
+```
+
+```{r geogrid_wlkp_regplot_trzask1, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_trzaskowski = tm_shape(resultreg_wlkp) + 
+tm_polygons("t1_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w I turze",
+              breaks = c(0, 17, 21 , 29, 35, 38.6), labels = c(" < 17", " 17 - 21", " 21 - 29", " 29 - 35", " > 35")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_trzaskowski)
+
+tmap_save(wlkp_regplot_trzaskowski, filename = "wlkp_regplot_trzaskowski1.png")
+
+```
+
+```{r geogrid_wlkp_regplot_trzask2, message=FALSE, warning=FALSE}
+
+# regplot -----------------------------------------------------------------
+
+wlkp_regplot_trzaskowski = tm_shape(resultreg_wlkp) + 
+  tm_polygons("t2_Rafał.Kazimierz.TRZASKOWSKI", palette = paleta_b, border.alpha = 0.3, title = "Odsetek głosów na Rafała \nTrzaskowskiego w II turze",
+              breaks = c(0, 32, 40, 49, 58, 76), labels = c(" < 32", " 32 - 40", " 40 - 49", " 49 - 58", " > 58")) +
+  tm_layout(frame = FALSE, legend.outside = TRUE)
+
+print(wlkp_regplot_trzaskowski)
+
+tmap_save(wlkp_regplot_trzaskowski, filename = "wlkp_regplot_trzaskowski2.png")
+
+```
