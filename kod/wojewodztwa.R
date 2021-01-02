@@ -77,11 +77,14 @@ woj = select(woj, -1)
 # Łączenie danych z geometrią
 wojewodztwa = merge(woj, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
 
-wojewodztwa$t1_frek = wojewodztwa$t1_Liczba.kart.ważnych*100 / wojewodztwa$t1_Liczba.wyborców.uprawnionych.do.głosowania
-wojewodztwa$t2_frek = wojewodztwa$t2_Liczba.kart.ważnych*100 / wojewodztwa$t2_Liczba.wyborców.uprawnionych.do.głosowania
+wojewodztwa$t1_frek = wojewodztwa$t1_Liczba.kart.ważnych *100 / wojewodztwa$t1_Liczba.wyborców.uprawnionych.do.głosowania
+wojewodztwa$t2_frek = wojewodztwa$t2_Liczba.kart.ważnych *100 / wojewodztwa$t2_Liczba.wyborców.uprawnionych.do.głosowania
 wojewodztwa$t1_duda = wojewodztwa$t1_Andrzej.Sebastian.DUDA * 100 / wojewodztwa$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wojewodztwa$t1_trzaskowski = wojewodztwa$t1_Rafał.Kazimierz.TRZASKOWSKI * 100 / wojewodztwa$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wojewodztwa$t2_duda = wojewodztwa$t2_Andrzej.Sebastian.DUDA * 100 / wojewodztwa$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wojewodztwa$t2_trzaskowski = wojewodztwa$t2_Rafał.Kazimierz.TRZASKOWSKI * 100 / wojewodztwa$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
+wojewodztwa$t2_roznica_glosow = wojewodztwa$t2_Andrzej.Sebastian.DUDA - wojewodztwa$t2_Rafał.Kazimierz.TRZASKOWSKI
+wojewodztwa$t1_roznica_glosow = wojewodztwa$t1_Andrzej.Sebastian.DUDA - wojewodztwa$t1_Rafał.Kazimierz.TRZASKOWSKI
+wojewodztwa$roznica_frek = wojewodztwa$t2_frek - wojewodztwa$t1_frek
 
 write_sf(wojewodztwa, dsn = "dane/wojewodztwa.gpkg")

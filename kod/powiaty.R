@@ -80,12 +80,14 @@ powiat = select(powiat, -1)
 # Łączenie danych z geometrią
 powiaty = merge(powiat, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
 
-powiaty$t1_frek = powiaty$t1_Liczba.kart.ważnych*100 / powiaty$t1_Liczba.wyborców.uprawnionych.do.głosowania
-powiaty$t2_frek = powiaty$t2_Liczba.kart.ważnych*100 / powiaty$t2_Liczba.wyborców.uprawnionych.do.głosowania
+powiaty$t1_frek = powiaty$t1_Liczba.kart.ważnych * 100 / powiaty$t1_Liczba.wyborców.uprawnionych.do.głosowania
+powiaty$t2_frek = powiaty$t2_Liczba.kart.ważnych *100 / powiaty$t2_Liczba.wyborców.uprawnionych.do.głosowania
 powiaty$t1_duda = powiaty$t1_Andrzej.Sebastian.DUDA * 100 / powiaty$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 powiaty$t1_trzaskowski = powiaty$t1_Rafał.Kazimierz.TRZASKOWSKI * 100 / powiaty$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 powiaty$t2_duda = powiaty$t2_Andrzej.Sebastian.DUDA * 100 / powiaty$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 powiaty$t2_trzaskowski = powiaty$t2_Rafał.Kazimierz.TRZASKOWSKI * 100 / powiaty$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
-
+powiaty$t2_roznica_glosow = powiaty$t2_Andrzej.Sebastian.DUDA - powiaty$t2_Rafał.Kazimierz.TRZASKOWSKI
+powiaty$t1_roznica_glosow = powiaty$t1_Andrzej.Sebastian.DUDA - powiaty$t1_Rafał.Kazimierz.TRZASKOWSKI
+powiaty$roznica_frek = powiaty$t2_frek - powiaty$t1_frek
 
 write_sf(powiaty, dsn = "dane/powiaty.gpkg")

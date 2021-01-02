@@ -81,11 +81,15 @@ wlkp = filter(wlkp, between(JPT_KOD_JE, 300000, 309999))
 # Łączenie danych z geometrią
 wlkp_merge = merge(wlkp, obie_tury, by.x="JPT_KOD_JE", by.y="t1_TERYT")
 
-wlkp_merge$t1_frek = wlkp_merge$t1_Liczba.kart.ważnych*100 / wlkp_merge$t1_Liczba.wyborców.uprawnionych.do.głosowania
-wlkp_merge$t2_frek = wlkp_merge$t2_Liczba.kart.ważnych*100 / wlkp_merge$t2_Liczba.wyborców.uprawnionych.do.głosowania
+wlkp_merge$t1_frek = wlkp_merge$t1_Liczba.kart.ważnych * 100 / wlkp_merge$t1_Liczba.wyborców.uprawnionych.do.głosowania
+wlkp_merge$t2_frek = wlkp_merge$t2_Liczba.kart.ważnych * 100 / wlkp_merge$t2_Liczba.wyborców.uprawnionych.do.głosowania
 wlkp_merge$t1_duda = wlkp_merge$t1_Andrzej.Sebastian.DUDA * 100 / wlkp_merge$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wlkp_merge$t1_trzaskowski = wlkp_merge$t1_Rafał.Kazimierz.TRZASKOWSKI * 100 / wlkp_merge$t1_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wlkp_merge$t2_duda = wlkp_merge$t2_Andrzej.Sebastian.DUDA * 100 / wlkp_merge$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
 wlkp_merge$t2_trzaskowski = wlkp_merge$t2_Rafał.Kazimierz.TRZASKOWSKI * 100 / wlkp_merge$t2_Liczba.głosów.ważnych.oddanych.łącznie.na.wszystkich.kandydatów
+wlkp_merge$t2_roznica_glosow = wlkp_merge$t2_Andrzej.Sebastian.DUDA - wlkp_merge$t2_Rafał.Kazimierz.TRZASKOWSKI
+wlkp_merge$t1_roznica_glosow = wlkp_merge$t1_Andrzej.Sebastian.DUDA - wlkp_merge$t1_Rafał.Kazimierz.TRZASKOWSKI
+wlkp_merge$roznica_frek = wlkp_merge$t2_frek - wlkp_merge$t1_frek
+
 
 write_sf(wlkp_merge, dsn = "dane/wielkopolska.gpkg")
