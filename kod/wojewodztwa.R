@@ -65,6 +65,7 @@ woj = read_sf("dane/pobrane/Wojew˘dztwa.shp", stringsAsFactors=FALSE) %>%
   select(-c(4:29))
 # Uproszczenie geometrii i zapisanie pliku w formacie geopackage (tutaj mały bajzel jest)
 woj_simp = ms_simplify(woj, keep_shapes = TRUE, keep = 0.2, explode = FALSE, snap = TRUE) 
+st_is_valid(woj_simp)
 woj$geometry = woj_simp$geometry
 write_sf(woj_simp, dsn = "dane/temp/wojewodztwa.gpkg")
 woj = read_sf("dane/temp/wojewodztwa.gpkg", stringsAsFactors=FALSE)
